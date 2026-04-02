@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+:root {
+  /* ── Brand Colors ── */
+  --color-accent: #E8FF47;
+  --color-accent-hover: #d4eb3a;
+
+  /* ── Background Layers ── */
+  --color-bg-base: #0D0F14;
+  --color-bg-card: #10131A;
+  --color-bg-hover: #161B28;
+  --color-bg-active: #1A2035;
+
+  /* ── Borders ── */
+  --color-border: #1A1E2E;
+  --color-border-strong: #252B40;
+
+  /* ── Text ── */
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #8A9AB5;
+  --color-text-muted: #3A4560;
+
+  /* ── Status Colors ── */
+  --color-success: #4ADE80;
+  --color-warning: #FBBF24;
+  --color-danger: #F87171;
+  --color-info: #378ADD;
+
+  /* ── Sidebar ── */
+  --sidebar-width: 220px;
+}
