@@ -1,5 +1,5 @@
 import moment from "moment";
-import type { Member, MemberStatus, PaymentStatus } from "../types";
+import type { GymClass, Member, MemberStatus, PaymentStatus } from "../types";
 import { MOCK_PLANS } from "../constants/mockData";
 
 // ─── Date helpers ─────────────────────────────────────────
@@ -132,7 +132,7 @@ export function calcPieChartData(state: Member[]) {
     const NewArr = state.filter((item) => MOCK_PLANS[i].name === item.planName);
     function generateRandomHexColor(): string {
       let randomColor = Math.floor(Math.random() * 16777215).toString(16);
-      
+
       randomColor = randomColor.padStart(6, "0");
 
       return `#${randomColor.toUpperCase()}`;
@@ -144,4 +144,10 @@ export function calcPieChartData(state: Member[]) {
     });
   }
   return planDistribution;
+}
+
+// today classes
+export function todayClassesFun(classes: GymClass[]): GymClass[] {
+  const now: number = new Date().getDay();
+  return classes.filter((cls) => cls.repeatDays.includes(now));
 }
