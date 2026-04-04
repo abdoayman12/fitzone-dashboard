@@ -208,6 +208,7 @@ export const MOCK_PAYMENTS: Payment[] = [
 ];
 
 // ─── Classes ─────────────────────────────────────────────
+// constants/mockData.ts — عدّل الـ MOCK_CLASSES
 export const MOCK_CLASSES: GymClass[] = [
   {
     id: "c-1",
@@ -215,8 +216,9 @@ export const MOCK_CLASSES: GymClass[] = [
     category: "yoga",
     trainerId: "t-1",
     trainerName: "Layla Nasser",
-    startTime: "2025-03-24T07:00",
-    endTime: "2025-03-24T08:00",
+    startTime: "07:00",
+    endTime: "08:00",
+    repeatDays: [1, 3, 5], // الاتنين والأربع والجمعة
     capacity: 15,
     enrolled: 12,
     color: "#4ADE80",
@@ -227,8 +229,9 @@ export const MOCK_CLASSES: GymClass[] = [
     category: "crossfit",
     trainerId: "t-2",
     trainerName: "Ahmed Samy",
-    startTime: "2025-03-24T09:00",
-    endTime: "2025-03-24T10:00",
+    startTime: "09:00",
+    endTime: "10:00",
+    repeatDays: [0, 2, 4, 6], // الأحد والتلات والخميس والسبت
     capacity: 20,
     enrolled: 20,
     color: "#F87171",
@@ -239,35 +242,12 @@ export const MOCK_CLASSES: GymClass[] = [
     category: "spinning",
     trainerId: "t-3",
     trainerName: "Rania Adel",
-    startTime: "2025-03-24T11:00",
-    endTime: "2025-03-24T12:00",
+    startTime: "11:00",
+    endTime: "12:00",
+    repeatDays: [1, 2, 3, 4, 5], // الاتنين للجمعة
     capacity: 18,
     enrolled: 10,
     color: "#378ADD",
-  },
-  {
-    id: "c-4",
-    name: "Zumba Evening",
-    category: "zumba",
-    trainerId: "t-1",
-    trainerName: "Layla Nasser",
-    startTime: "2025-03-24T18:00",
-    endTime: "2025-03-24T19:00",
-    capacity: 25,
-    enrolled: 17,
-    color: "#FBBF24",
-  },
-  {
-    id: "c-5",
-    name: "Boxing Basics",
-    category: "boxing",
-    trainerId: "t-4",
-    trainerName: "Khaled Magdy",
-    startTime: "2025-03-24T20:00",
-    endTime: "2025-03-24T21:00",
-    capacity: 12,
-    enrolled: 8,
-    color: "#F97316",
   },
 ];
 
