@@ -210,45 +210,7 @@ export const MOCK_PAYMENTS: Payment[] = [
 // ─── Classes ─────────────────────────────────────────────
 // constants/mockData.ts — عدّل الـ MOCK_CLASSES
 export const MOCK_CLASSES: GymClass[] = [
-  {
-    id: "c-1",
-    name: "Morning Yoga",
-    category: "yoga",
-    trainerId: "t-1",
-    trainerName: "Layla Nasser",
-    startTime: "07:00",
-    endTime: "08:00",
-    repeatDays: [1, 3, 5], // الاتنين والأربع والجمعة
-    capacity: 15,
-    enrolled: 12,
-    color: "#4ADE80",
-  },
-  {
-    id: "c-2",
-    name: "CrossFit HIIT",
-    category: "crossfit",
-    trainerId: "t-2",
-    trainerName: "Ahmed Samy",
-    startTime: "09:00",
-    endTime: "10:00",
-    repeatDays: [0, 2, 4, 6], // الأحد والتلات والخميس والسبت
-    capacity: 20,
-    enrolled: 20,
-    color: "#F87171",
-  },
-  {
-    id: "c-3",
-    name: "Spinning",
-    category: "spinning",
-    trainerId: "t-3",
-    trainerName: "Rania Adel",
-    startTime: "11:00",
-    endTime: "12:00",
-    repeatDays: [1, 2, 3, 4, 5], // الاتنين للجمعة
-    capacity: 18,
-    enrolled: 10,
-    color: "#378ADD",
-  },
+
 ];
 
 // ─── Trainers ────────────────────────────────────────────

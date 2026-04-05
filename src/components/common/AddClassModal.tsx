@@ -144,6 +144,7 @@ export default function AddClassModal({ onClose }: Props) {
         justifyContent: "center",
         zIndex: 50,
       }}
+      className="backdrop-blur-sm"
     >
       <div
         onClick={(e) => e.stopPropagation()}

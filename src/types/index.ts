@@ -82,3 +82,12 @@ export interface KpiData {
   memberGrowth: { month: string; count: number }[];
   planDistribution: { name: string; value: number; color: string }[];
 }
+
+// types/index.ts
+export interface Enrollment {
+  id: string;
+  classId: string;
+  memberId: string;
+  memberName: string;
+  enrolledAt: string; // ISO date
+}

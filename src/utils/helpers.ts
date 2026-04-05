@@ -149,5 +149,7 @@ export function calcPieChartData(state: Member[]) {
 // today classes
 export function todayClassesFun(classes: GymClass[]): GymClass[] {
   const now: number = new Date().getDay();
-  return classes.filter((cls) => cls.repeatDays.includes(now));
+  return classes
+    .filter((cls) => cls.repeatDays.includes(now))
+    .sort((a, b) => a.startTime.localeCompare(b.startTime));
 }

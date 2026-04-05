@@ -6,12 +6,18 @@ import { useState } from "react";
 import AddClassModal from "../components/common/AddClassModal";
 import { useAddClass } from "../Hooks/useAddClass";
 import { todayClassesFun } from "../utils/helpers";
+import { useEnrollment } from "../Hooks/useEnrollment";
+import { GymClass } from "@/types";
+import ManageEnrollmentModal from "../components/common/ManageEnrollmentModal";
 
 export default function ClassesPage() {
   const { stateClass } = useAddClass();
+  const { stateEnrollment } = useEnrollment();
   const [showAddClass, setShowAddClass] = useState<boolean>(false);
+  const [managingClass, setManagingClass] = useState<GymClass | null>(null);
   const todayClasses = todayClassesFun(stateClass);
 
+  console.log(stateEnrollment)
   return (
     <div>
       <PageHeader
@@ -64,6 +70,12 @@ export default function ClassesPage() {
         {todayClasses.map((cls) => {
           const spotsLeft = cls.capacity - cls.enrolled;
           const fillPct = Math.round((cls.enrolled / cls.capacity) * 100);
+          const enrolledCount = stateEnrollment.filter(
+            (e) => e.classId === cls.id,
+          ).length;
+          const enrolledMembers = stateEnrollment
+            .filter((e) => e.classId === cls.id)
+            .slice(0, 3);
           return (
             <div
               key={cls.id}
@@ -209,11 +221,122 @@ export default function ClassesPage() {
                   />
                 </div>
               </div>
+
+              {/* ── الجزء الجديد ── */}
+              <div
+                style={{ height: 1, background: "#1A1E2E", marginBottom: 12 }}
+              />
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                {/* Mini avatars + عدد */}
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <div style={{ display: "flex" }}>
+                    {enrolledMembers.map((e, i) => (
+                      <div
+                        key={e.id}
+                        style={{
+                          width: 22,
+                          height: 22,
+                          borderRadius: 6,
+                          border: "2px solid #10131A",
+                          background: "rgba(232,255,71,0.12)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: 8,
+                          fontWeight: 700,
+                          color: "#E8FF47",
+                          marginLeft: i === 0 ? 0 : -6,
+                        }}
+                      >
+                        {e.memberName
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")
+                          .toUpperCase()}
+                      </div>
+                    ))}
+                    {enrolledCount > 3 && (
+                      <div
+                        style={{
+                          width: 22,
+                          height: 22,
+                          borderRadius: 6,
+                          border: "2px solid #10131A",
+                          background: "#161B28",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: 9,
+                          color: "#5A6280",
+                          marginLeft: -6,
+                        }}
+                      >
+                        +{enrolledCount - 3}
+                      </div>
+                    )}
+                  </div>
+                  <span style={{ fontSize: 12, color: "#5A6280" }}>
+                    <span style={{ color: "#C8D0E0", fontWeight: 600 }}>
+                      {enrolledCount}
+                    </span>{" "}
+                    enrolled
+                  </span>
+                </div>
+                <button
+                  onClick={() => setManagingClass(cls)}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 5,
+                    padding: "6px 14px",
+                    borderRadius: 8,
+                    border: `1px solid ${spotsLeft === 0 ? "rgba(248,113,113,0.25)" : "rgba(232,255,71,0.25)"}`,
+                    background:
+                      spotsLeft === 0
+                        ? "rgba(248,113,113,0.06)"
+                        : "rgba(232,255,71,0.06)",
+                    color: spotsLeft === 0 ? "#F87171" : "#E8FF47",
+                    fontSize: 12,
+                    fontWeight: 600,
+                    cursor: "pointer",
+                  }}
+                >
+                  <svg
+                    width="13"
+                    height="13"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
+                  </svg>
+                  Manage Enrollment
+                </button>
+              </div>
             </div>
           );
         })}
-      </div>
 
+        {showAddClass && (
+          <AddClassModal onClose={() => setShowAddClass(false)} />
+        )}
+        {/* Modal */}
+        {managingClass && (
+          <ManageEnrollmentModal
+            gymClass={managingClass}
+            onClose={() => setManagingClass(null)}
+          />
+        )}
+      </div>
       {/* Trainers Section */}
       <p
         style={{
@@ -298,7 +421,6 @@ export default function ClassesPage() {
           );
         })}
       </div>
-      {showAddClass && <AddClassModal onClose={() => setShowAddClass(false)} />}
     </div>
   );
 }
