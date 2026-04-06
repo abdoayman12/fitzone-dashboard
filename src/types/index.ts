@@ -89,5 +89,7 @@ export interface Enrollment {
   classId: string;
   memberId: string;
   memberName: string;
+  trainerName?: string;
+  trainerID: string;
   enrolledAt: string; // ISO date
 }

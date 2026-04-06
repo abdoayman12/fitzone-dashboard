@@ -7,6 +7,7 @@ import MembersPage from "../pages/MembersPage";
 import ClassesPage from "../pages/ClassesPage";
 import PaymentsPage from "../pages/PaymentsPage";
 import SubscriptionsPage from "../pages/SubscriptionsPage";
+import TrainersPage from "../pages/TrainersPage";
 
 export default function AppRoutes() {
   return (
@@ -16,6 +17,7 @@ export default function AppRoutes() {
         <Route path="dashboard" element={<DashboardPage />} />
         <Route path="members" element={<MembersPage />} />
         <Route path="classes" element={<ClassesPage />} />
+        <Route path="trainers" element={<TrainersPage />} />
         <Route path="payments" element={<PaymentsPage />} />
         <Route path="subscriptions" element={<SubscriptionsPage />} />
       </Route>

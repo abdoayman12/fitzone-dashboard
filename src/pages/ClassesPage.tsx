@@ -221,8 +221,7 @@ export default function ClassesPage() {
                   />
                 </div>
               </div>
-
-              {/* ── الجزء الجديد ── */}
+              
               <div
                 style={{ height: 1, background: "#1A1E2E", marginBottom: 12 }}
               />

@@ -49,6 +49,7 @@ export default function ManageEnrollmentModal({ gymClass, onClose }: Props) {
         classId: gymClass.id,
         memberId,
         memberName,
+        trainerID: gymClass.trainerId,
         enrolledAt: new Date().toISOString(),
       },
     });
@@ -65,7 +66,7 @@ export default function ManageEnrollmentModal({ gymClass, onClose }: Props) {
     toast.success(`${memberName} removed`);
     dispatchClass({ type: "DEL_ENROLLED", payloud: gymClass.id });
   };
-
+  console.log(stateEnrollment)
   return (
     <div
       onClick={onClose}
