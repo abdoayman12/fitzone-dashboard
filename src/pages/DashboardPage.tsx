@@ -27,10 +27,12 @@ import {
   formatDate,
   getCurrentYearMonths,
   memberStatusConfig,
+  todayClassesFun,
   totalMembers,
 } from "../utils/helpers";
 import { useAddMember } from "../Hooks/useAddMember";
 import { useMemo } from "react";
+import { useAddClass } from "../Hooks/useAddClass";
 
 const monthNames = [
   "Jan",
@@ -50,6 +52,8 @@ const nowDate = new Date();
 export default function DashboardPage() {
   const { stateMember } = useAddMember();
   const recentMembers = stateMember.slice(0, 5);
+  const { stateClass } = useAddClass();
+  const todayClasses = todayClassesFun(stateClass);
   const planDistribution = useMemo(
     () => calcPieChartData(stateMember),
     [stateMember],
@@ -96,8 +100,7 @@ export default function DashboardPage() {
         />
         <KpiCard
           label="Today's Sessions"
-          value={MOCK_KPI.todaysSessions}
-          sub="3 classes remaining"
+          value={todayClasses.length}
           icon={<MdFitnessCenter size={18} />}
         />
         <KpiCard

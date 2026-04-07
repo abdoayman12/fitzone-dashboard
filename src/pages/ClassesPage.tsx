@@ -1,4 +1,3 @@
-import { MOCK_CLASSES, MOCK_TRAINERS } from "../constants/mockData";
 import Avatar from "../components/common/Avatar";
 import PageHeader from "../components/common/PageHeader";
 import { MdAdd, MdAccessTime, MdPeople } from "react-icons/md";
@@ -9,6 +8,7 @@ import { todayClassesFun } from "../utils/helpers";
 import { useEnrollment } from "../Hooks/useEnrollment";
 import { GymClass } from "@/types";
 import ManageEnrollmentModal from "../components/common/ManageEnrollmentModal";
+import { useTrainer } from "../Hooks/useTrainer";
 
 export default function ClassesPage() {
   const { stateClass } = useAddClass();
@@ -16,6 +16,7 @@ export default function ClassesPage() {
   const [showAddClass, setShowAddClass] = useState<boolean>(false);
   const [managingClass, setManagingClass] = useState<GymClass | null>(null);
   const todayClasses = todayClassesFun(stateClass);
+  const { stateTrainer } = useTrainer()
 
   console.log(stateEnrollment)
   return (
@@ -357,8 +358,8 @@ export default function ClassesPage() {
           gap: 14,
         }}
       >
-        {MOCK_TRAINERS.map((trainer) => {
-          const trainerClasses = MOCK_CLASSES.filter(
+        {stateTrainer.map((trainer) => {
+          const trainerClasses = stateClass.filter(
             (c) => c.trainerId === trainer.id,
           );
           return (

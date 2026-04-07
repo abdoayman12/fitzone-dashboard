@@ -1,34 +1,27 @@
 import type {
-  Member,
   Plan,
   Payment,
-  GymClass,
   Trainer,
   KpiData,
 } from "../types";
 
 // ─── KPI Data ────────────────────────────────────────────
 export const MOCK_KPI: KpiData = {
-  todaysSessions: 37,
   memberGrowth: [
-    { month: "Jan", count: 420 },
-    { month: "Feb", count: 580 },
-    { month: "Mar", count: 510 },
-    { month: "Apr", count: 740 },
-    { month: "May", count: 660 },
-    { month: "Jun", count: 850 },
-    { month: "Jul", count: 800 },
-    { month: "Aug", count: 1010 },
-    { month: "Sep", count: 940 },
-    { month: "Oct", count: 980 },
-    { month: "Nov", count: 1100 },
-    { month: "Dec", count: 1284 },
+    { month: "Jan" },
+    { month: "Feb" },
+    { month: "Mar" },
+    { month: "Apr" },
+    { month: "May" },
+    { month: "Jun" },
+    { month: "Jul" },
+    { month: "Aug"},
+    { month: "Sep" },
+    { month: "Oct" },
+    { month: "Nov" },
+    { month: "Dec"},
   ],
-  planDistribution: [
-    { name: "Monthly", value: 40, color: "#E8FF47" },
-    { name: "Quarterly", value: 33, color: "#378ADD" },
-    { name: "Annual", value: 27, color: "#4ADE80" },
-  ],
+
 };
 
 // ─── Plans ───────────────────────────────────────────────
@@ -64,82 +57,6 @@ export const MOCK_PLANS: Plan[] = [
       "Personal trainer session",
       "Nutrition plan",
     ],
-  },
-];
-
-// ─── Members ─────────────────────────────────────────────
-export const MOCK_MEMBERS: Member[] = [
-  {
-    id: "m-1",
-    name: "Karim Mostafa",
-    phone: "+20 100 123 4567",
-    email: "karim@email.com",
-    avatarColor: "#E8FF47",
-    planName: "Annual",
-    startDate: "2025-01-01",
-    expiryDate: "2026-01-01",
-    status: "active",
-    totalPaid: 3000,
-  },
-  {
-    id: "m-2",
-    name: "Nour Salem",
-    phone: "+20 101 234 5678",
-    email: "nour@email.com",
-    avatarColor: "#378ADD",
-    planName: "Monthly",
-    startDate: "2025-03-01",
-    expiryDate: "2025-04-01",
-    status: "expiring",
-    totalPaid: 350,
-  },
-  {
-    id: "m-3",
-    name: "Hassan Farid",
-    phone: "+20 112 345 6789",
-    email: "hassan@email.com",
-    avatarColor: "#4ADE80",
-    planName: "Quarterly",
-    startDate: "2024-12-01",
-    expiryDate: "2025-03-01",
-    status: "expired",
-    totalPaid: 900,
-  },
-  {
-    id: "m-4",
-    name: "Sara Ahmed",
-    phone: "+20 122 456 7890",
-    email: "sara@email.com",
-    avatarColor: "#F87171",
-    planName: "Annual",
-    startDate: "2025-02-01",
-    expiryDate: "2026-02-01",
-    status: "active",
-    totalPaid: 3000,
-  },
-  {
-    id: "m-5",
-    name: "Omar Khaled",
-    phone: "+20 100 567 8901",
-    email: "omar@email.com",
-    avatarColor: "#FBBF24",
-    planName: "Monthly",
-    startDate: "2025-03-10",
-    expiryDate: "2025-04-10",
-    status: "active",
-    totalPaid: 350,
-  },
-  {
-    id: "m-6",
-    name: "Mona Hassan",
-    phone: "+20 111 678 9012",
-    email: "mona@email.com",
-    avatarColor: "#A78BFA",
-    planName: "Quarterly",
-    startDate: "2025-01-15",
-    expiryDate: "2025-04-15",
-    status: "expiring",
-    totalPaid: 900,
   },
 ];
 
@@ -207,11 +124,6 @@ export const MOCK_PAYMENTS: Payment[] = [
   },
 ];
 
-// ─── Classes ─────────────────────────────────────────────
-// constants/mockData.ts — عدّل الـ MOCK_CLASSES
-export const MOCK_CLASSES: GymClass[] = [
-
-];
 
 // ─── Trainers ────────────────────────────────────────────
 export const MOCK_TRAINERS: Trainer[] = [

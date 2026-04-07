@@ -8,10 +8,10 @@ import {
   MdPerson,
   MdClass,
 } from "react-icons/md";
-import { MOCK_TRAINERS } from "../../constants/mockData";
 import type { GymClass, ClassCategory } from "../../types";
 import toast from "react-hot-toast";
 import { useAddClass } from "../../Hooks/useAddClass";
+import { useTrainer } from "../../Hooks/useTrainer";
 
 interface Props {
   onClose: () => void;
@@ -44,7 +44,7 @@ const EMPTY_FORM = {
 export default function AddClassModal({ onClose }: Props) {
   const [form, setForm] = useState(EMPTY_FORM);
   const { dispatchClass } = useAddClass();
-
+  const { stateTrainer } = useTrainer();
   // ── helpers ───────────────────────────────────────────────
   const set = <K extends keyof typeof EMPTY_FORM>(
     key: K,
@@ -60,7 +60,7 @@ export default function AddClassModal({ onClose }: Props) {
     }));
   };
 
-  const selectedTrainer = MOCK_TRAINERS.find((t) => t.id === form.trainerId);
+  const selectedTrainer = stateTrainer.find((t) => t.id === form.trainerId);
   const selectedCategory = CATEGORIES.find((c) => c.value === form.category)!;
 
   // ── validation ───────────────────────────────────────────
@@ -116,7 +116,7 @@ export default function AddClassModal({ onClose }: Props) {
 
     toast.success(`"${newClass.name}" added successfully!`);
     dispatchClass({ type: "ADD_CLASS", payloud: newClass });
-    console.log(newClass)
+    console.log(newClass);
     onClose();
   };
 
@@ -334,9 +334,7 @@ export default function AddClassModal({ onClose }: Props) {
                   }}
                   value={form.trainerId}
                   onChange={(e) => {
-                    const t = MOCK_TRAINERS.find(
-                      (t) => t.id === e.target.value,
-                    );
+                    const t = stateTrainer.find((t) => t.id === e.target.value);
                     setForm((prev) => ({
                       ...prev,
                       trainerId: e.target.value,
@@ -345,7 +343,7 @@ export default function AddClassModal({ onClose }: Props) {
                   }}
                 >
                   <option value="">Select trainer</option>
-                  {MOCK_TRAINERS.map((t) => (
+                  {stateTrainer.map((t) => (
                     <option key={t.id} value={t.id}>
                       {t.name}
                     </option>

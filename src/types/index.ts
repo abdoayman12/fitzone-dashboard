@@ -78,9 +78,7 @@ export interface Trainer {
 
 // ─── Dashboard KPIs ───────────────────────────────────────
 export interface KpiData {
-  todaysSessions: number;
-  memberGrowth: { month: string; count: number }[];
-  planDistribution: { name: string; value: number; color: string }[];
+  memberGrowth: { month: string; }[];
 }
 
 // types/index.ts
