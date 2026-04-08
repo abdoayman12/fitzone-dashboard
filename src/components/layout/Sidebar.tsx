@@ -3,7 +3,6 @@ import {
   MdDashboard,
   MdPeople,
   MdCalendarMonth,
-  MdPayment,
   MdCardMembership,
   MdSettings,
   MdFitnessCenter,
@@ -24,7 +23,6 @@ const mainNav: NavItem[] = [
 ];
 
 const financeNav: NavItem[] = [
-  { label: "Payments", path: "/payments", icon: <MdPayment size={18} /> },
   {
     label: "Subscriptions",
     path: "/subscriptions",

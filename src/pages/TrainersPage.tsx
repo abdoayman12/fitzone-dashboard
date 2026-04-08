@@ -6,6 +6,9 @@ import { MdAdd, MdSearch } from "react-icons/md";
 import { todayClassesFun } from "../utils/helpers";
 import { useState } from "react";
 import AddTrainerModal from "../components/common/AddTrainerModal";
+import DeleteTrainerDialog from "../components/common/DeleteTrainerDialog";
+import { Trainer } from "@/types";
+import EditTrainerModal from "../components/common/EditTrainerModal";
 
 const styles = {
   addBtn: {
@@ -83,6 +86,8 @@ export default function TrainersPage() {
   const [filter, setFilter] = useState("All");
   const [searchInput, setSearchInput] = useState("");
   const [showTrainerModal, setShowTrainerModal] = useState(false);
+  const [trainerToDelete, setTrainerToDelete] = useState<Trainer | null>(null);
+  const [trainerToEdit, setTrainerToEdit] = useState<Trainer | null>(null);
   const { stateTrainer } = useTrainer();
   const { stateClass } = useAddClass();
   const todayClasses = todayClassesFun(stateClass);
@@ -189,16 +194,35 @@ export default function TrainersPage() {
               todayClasses={todayClassesThisTrainer}
               weekClasses={ClassesThisTrainer}
               enrolledCount={totalEnrolled}
-              onEdit={() => {}}
-              onDelete={() => {}}
+              onEdit={() => {
+                setTrainerToEdit(trainer);
+              }}
+              onDelete={() => {
+                setTrainerToDelete(trainer);
+              }}
             />
           );
         })}
       </div>
+      {/* Add trainer */}
       {showTrainerModal ? (
         <AddTrainerModal onClose={() => setShowTrainerModal(false)} />
       ) : (
         ""
+      )}
+      {/* Delete trainer */}
+      {trainerToDelete && (
+        <DeleteTrainerDialog
+          trainer={trainerToDelete}
+          onCancel={() => setTrainerToDelete(null)}
+        />
+      )}
+      {/* UPD trainer */}
+      {trainerToEdit && (
+        <EditTrainerModal
+          trainer={trainerToEdit}
+          onCancel={() => setTrainerToEdit(null)}
+        />
       )}
     </div>
   );

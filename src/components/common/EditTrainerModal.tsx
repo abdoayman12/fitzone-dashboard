@@ -1,19 +1,21 @@
-// components/common/AddTrainerModal.tsx
 import { useState } from "react";
 import {
-  MdClose,
+  MdEdit,
   MdCheck,
+  MdClose,
   MdPerson,
   MdPhone,
   MdEmail,
   MdFitnessCenter,
+  MdAccessTime,
 } from "react-icons/md";
 import type { Trainer } from "../../types";
 import { useTrainer } from "../../Hooks/useTrainer";
 import toast from "react-hot-toast";
 
 interface Props {
-  onClose: () => void;
+  trainer: Trainer;
+  onCancel: () => void;
 }
 
 const COLORS = [
@@ -26,7 +28,6 @@ const COLORS = [
   "#E8FF47",
   "#F472B6",
 ];
-
 const SPECIALTIES = [
   "Yoga",
   "CrossFit",
@@ -37,49 +38,50 @@ const SPECIALTIES = [
   "Yoga & Zumba",
 ];
 
-const EMPTY = {
-  firstName: "",
-  lastName: "",
-  phone: "",
-  email: "",
-  specialty: "",
-  avatarColor: "#4ADE80",
-};
-
-export default function AddTrainerModal({ onClose }: Props) {
-  const [form, setForm] = useState(EMPTY);
+export default function EditTrainerModal({ trainer, onCancel }: Props) {
+  const nameParts = trainer.name.split(" ");
   const { dispatchTrainer } = useTrainer();
-  const set = (key: keyof typeof EMPTY, val: string) =>
+
+  const [form, setForm] = useState({
+    firstName: nameParts[0] ?? "",
+    lastName: nameParts.slice(1).join(" ") ?? "",
+    phone: trainer.phone,
+    email: trainer.email,
+    specialty: trainer.specialty,
+    avatarColor: trainer.avatarColor,
+  });
+
+  const set = (key: keyof typeof form, val: string) =>
     setForm((prev) => ({ ...prev, [key]: val }));
 
+  const fullName = [form.firstName, form.lastName].filter(Boolean).join(" ");
   const initials =
     [form.firstName[0], form.lastName[0]]
       .filter(Boolean)
       .join("")
       .toUpperCase() || "TR";
 
-  const fullName =
-    [form.firstName, form.lastName].filter(Boolean).join(" ") || "Trainer Name";
-
   const handleSave = () => {
-    if (!form.firstName.trim() || !form.lastName.trim()) return;
-    if (!form.phone.trim()) return;
-    if (!form.specialty) return;
-
-    const newTrainer: Trainer = {
-      id: `t-${Date.now()}`,
+    if (
+      !form.firstName.trim() ||
+      !form.lastName.trim() ||
+      !form.specialty ||
+      !form.phone.trim()
+    )
+      return;
+    const UPDTrainer: Trainer = {
+      ...trainer,
       name: fullName,
       specialty: form.specialty,
       phone: form.phone,
       email: form.email,
       avatarColor: form.avatarColor,
     };
-    dispatchTrainer({ type: "ADD_TRAINER", payloud: newTrainer });
-    toast.success(`${newTrainer.name} added successfully!`);
-    onClose();
+    dispatchTrainer({ type: "UPD_TRAINER", payloud: UPDTrainer });
+    toast.success(`${UPDTrainer.name} updated`);
+    onCancel()
   };
 
-  // ── Shared styles ──
   const inp: React.CSSProperties = {
     background: "#0D0F14",
     border: "1px solid #252B40",
@@ -94,7 +96,7 @@ export default function AddTrainerModal({ onClose }: Props) {
 
   return (
     <div
-      onClick={onClose}
+      onClick={onCancel}
       style={{
         position: "fixed",
         inset: 0,
@@ -104,7 +106,6 @@ export default function AddTrainerModal({ onClose }: Props) {
         justifyContent: "center",
         zIndex: 50,
       }}
-      className="backdrop-blur-sm"
     >
       <div
         onClick={(e) => e.stopPropagation()}
@@ -118,7 +119,7 @@ export default function AddTrainerModal({ onClose }: Props) {
           overflowY: "auto",
         }}
       >
-        {/* ── Header ── */}
+        {/* Header */}
         <div
           style={{
             display: "flex",
@@ -134,14 +135,14 @@ export default function AddTrainerModal({ onClose }: Props) {
                 width: 38,
                 height: 38,
                 borderRadius: 10,
-                background: "rgba(232,255,71,0.1)",
-                border: "1px solid rgba(232,255,71,0.2)",
+                background: "rgba(55,138,221,0.1)",
+                border: "1px solid rgba(55,138,221,0.2)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
               }}
             >
-              <MdPerson size={20} color="#E8FF47" />
+              <MdEdit size={18} color="#378ADD" />
             </div>
             <div>
               <p
@@ -152,15 +153,15 @@ export default function AddTrainerModal({ onClose }: Props) {
                   margin: 0,
                 }}
               >
-                Add New Trainer
+                Edit Trainer
               </p>
               <p style={{ color: "#3A4560", fontSize: 11, margin: 0 }}>
-                Fill in the trainer's details below
+                Editing: {trainer.name}
               </p>
             </div>
           </div>
           <button
-            onClick={onClose}
+            onClick={onCancel}
             style={{
               width: 28,
               height: 28,
@@ -169,7 +170,6 @@ export default function AddTrainerModal({ onClose }: Props) {
               borderRadius: 7,
               cursor: "pointer",
               color: "#5A6280",
-              fontSize: 13,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -179,7 +179,7 @@ export default function AddTrainerModal({ onClose }: Props) {
           </button>
         </div>
 
-        {/* ── Body ── */}
+        {/* Body */}
         <div
           style={{
             padding: "20px 24px",
@@ -228,137 +228,67 @@ export default function AddTrainerModal({ onClose }: Props) {
                   margin: 0,
                 }}
               >
-                {fullName}
+                {fullName || trainer.name}
               </p>
-              <p
-                style={{
-                  color: "#5A6280",
-                  fontSize: 11,
-                  margin: "3px 0 0",
-                  lineHeight: 1.5,
-                }}
-              >
-                Avatar generated automatically
-                <br />
-                from name initials
+              <p style={{ color: "#5A6280", fontSize: 11, margin: "3px 0 0" }}>
+                {form.specialty || trainer.specialty}
               </p>
             </div>
           </div>
 
-          {/* Section */}
-          <SectionLabel>Personal Information</SectionLabel>
+          <SLabel>Personal Information</SLabel>
 
-          {/* First + Last name */}
           <div
             style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}
           >
             <Field label="First Name" required>
-              <div style={{ position: "relative" }}>
-                <MdPerson
-                  size={14}
-                  color="#3A4560"
-                  style={{
-                    position: "absolute",
-                    left: 11,
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                  }}
-                />
+              <Inp icon={<MdPerson size={14} color="#3A4560" />}>
                 <input
                   style={inp}
-                  placeholder="Layla"
                   value={form.firstName}
                   onChange={(e) => set("firstName", e.target.value)}
                 />
-              </div>
+              </Inp>
             </Field>
             <Field label="Last Name" required>
-              <div style={{ position: "relative" }}>
-                <MdPerson
-                  size={14}
-                  color="#3A4560"
-                  style={{
-                    position: "absolute",
-                    left: 11,
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                  }}
-                />
+              <Inp icon={<MdPerson size={14} color="#3A4560" />}>
                 <input
                   style={inp}
-                  placeholder="Nasser"
                   value={form.lastName}
                   onChange={(e) => set("lastName", e.target.value)}
                 />
-              </div>
+              </Inp>
             </Field>
           </div>
 
-          {/* Phone + Email */}
           <div
             style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}
           >
             <Field label="Phone" required>
-              <div style={{ position: "relative" }}>
-                <MdPhone
-                  size={14}
-                  color="#3A4560"
-                  style={{
-                    position: "absolute",
-                    left: 11,
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                  }}
-                />
+              <Inp icon={<MdPhone size={14} color="#3A4560" />}>
                 <input
                   style={inp}
-                  placeholder="+20 100 000 0000"
                   value={form.phone}
                   onChange={(e) => set("phone", e.target.value)}
                 />
-              </div>
+              </Inp>
             </Field>
             <Field label="Email">
-              <div style={{ position: "relative" }}>
-                <MdEmail
-                  size={14}
-                  color="#3A4560"
-                  style={{
-                    position: "absolute",
-                    left: 11,
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                  }}
-                />
+              <Inp icon={<MdEmail size={14} color="#3A4560" />}>
                 <input
                   style={inp}
-                  placeholder="trainer@fitzone.com"
                   value={form.email}
-                  type="email"
                   onChange={(e) => set("email", e.target.value)}
                 />
-              </div>
+              </Inp>
             </Field>
           </div>
 
           <div style={{ height: 1, background: "#1A1E2E" }} />
-
-          {/* Specialty */}
-          <SectionLabel>Specialty</SectionLabel>
+          <SLabel>Specialty</SLabel>
 
           <Field label="Specialty" required>
-            <div style={{ position: "relative" }}>
-              <MdFitnessCenter
-                size={14}
-                color="#3A4560"
-                style={{
-                  position: "absolute",
-                  left: 11,
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  pointerEvents: "none",
-                }}
-              />
+            <Inp icon={<MdFitnessCenter size={14} color="#3A4560" />}>
               <select
                 style={{ ...inp, appearance: "none", cursor: "pointer" }}
                 value={form.specialty}
@@ -371,13 +301,11 @@ export default function AddTrainerModal({ onClose }: Props) {
                   </option>
                 ))}
               </select>
-            </div>
+            </Inp>
           </Field>
 
           <div style={{ height: 1, background: "#1A1E2E" }} />
-
-          {/* Avatar color */}
-          <SectionLabel>Avatar Color</SectionLabel>
+          <SLabel>Avatar Color</SLabel>
 
           <Field label="Choose a color">
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
@@ -386,12 +314,11 @@ export default function AddTrainerModal({ onClose }: Props) {
                   key={c}
                   onClick={() => set("avatarColor", c)}
                   style={{
-                    width: 30,
-                    height: 30,
+                    width: 28,
+                    height: 28,
                     borderRadius: "50%",
                     background: c,
                     cursor: "pointer",
-                    flexShrink: 0,
                     border: `2px solid ${form.avatarColor === c ? "#fff" : "transparent"}`,
                     transform:
                       form.avatarColor === c ? "scale(1.15)" : "scale(1)",
@@ -403,7 +330,7 @@ export default function AddTrainerModal({ onClose }: Props) {
           </Field>
         </div>
 
-        {/* ── Footer ── */}
+        {/* Footer */}
         <div
           style={{
             display: "flex",
@@ -413,12 +340,26 @@ export default function AddTrainerModal({ onClose }: Props) {
             borderTop: "1px solid #1A1E2E",
           }}
         >
-          <p style={{ fontSize: 11, color: "#2E3550" }}>
-            Fields marked * are required
-          </p>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 4,
+              fontSize: 11,
+              color: "#2E3550",
+            }}
+          >
+            <MdAccessTime size={12} />
+            Last edited:{" "}
+            {new Date().toLocaleDateString("en-GB", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            })}
+          </div>
           <div style={{ display: "flex", gap: 8 }}>
             <button
-              onClick={onClose}
+              onClick={onCancel}
               style={{
                 background: "transparent",
                 border: "1px solid #1E2230",
@@ -434,11 +375,11 @@ export default function AddTrainerModal({ onClose }: Props) {
             <button
               onClick={handleSave}
               style={{
-                background: "#E8FF47",
+                background: "#378ADD",
                 border: "none",
                 borderRadius: 8,
                 padding: "9px 20px",
-                color: "#0D0F14",
+                color: "#fff",
                 fontSize: 13,
                 fontWeight: 700,
                 cursor: "pointer",
@@ -447,7 +388,7 @@ export default function AddTrainerModal({ onClose }: Props) {
                 gap: 6,
               }}
             >
-              <MdCheck size={16} /> Save Trainer
+              <MdCheck size={16} /> Save Changes
             </button>
           </div>
         </div>
@@ -457,7 +398,7 @@ export default function AddTrainerModal({ onClose }: Props) {
 }
 
 // ── Helpers ──
-function SectionLabel({ children }: { children: React.ReactNode }) {
+function SLabel({ children }: { children: React.ReactNode }) {
   return (
     <p
       style={{
@@ -473,7 +414,6 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
     </p>
   );
 }
-
 function Field({
   label,
   required,
@@ -497,6 +437,30 @@ function Field({
       >
         {label} {required && <span style={{ color: "#E8FF47" }}>*</span>}
       </p>
+      {children}
+    </div>
+  );
+}
+function Inp({
+  icon,
+  children,
+}: {
+  icon: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <div style={{ position: "relative" }}>
+      <div
+        style={{
+          position: "absolute",
+          left: 11,
+          top: "50%",
+          transform: "translateY(-50%)",
+          pointerEvents: "none",
+        }}
+      >
+        {icon}
+      </div>
       {children}
     </div>
   );
