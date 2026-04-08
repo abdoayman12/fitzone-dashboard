@@ -5,6 +5,7 @@ import { useTrainer } from "../Hooks/useTrainer";
 import { MdAdd, MdSearch } from "react-icons/md";
 import { todayClassesFun } from "../utils/helpers";
 import { useState } from "react";
+import AddTrainerModal from "../components/common/AddTrainerModal";
 
 const styles = {
   addBtn: {
@@ -79,10 +80,11 @@ const styles = {
 };
 
 export default function TrainersPage() {
-  const { stateTrainer } = useTrainer();
-  const { stateClass } = useAddClass();
   const [filter, setFilter] = useState("All");
   const [searchInput, setSearchInput] = useState("");
+  const [showTrainerModal, setShowTrainerModal] = useState(false);
+  const { stateTrainer } = useTrainer();
+  const { stateClass } = useAddClass();
   const todayClasses = todayClassesFun(stateClass);
   const totalEnrolled = todayClasses.reduce(
     (total, item) => total + item.enrolled,
@@ -95,7 +97,6 @@ export default function TrainersPage() {
       .includes(searchInput.toLowerCase());
     return filterItem && searchItem;
   });
-  console.log(stateTrainer);
   return (
     <div>
       {/* ── Page Header ── */}
@@ -103,7 +104,10 @@ export default function TrainersPage() {
         title="Trainers"
         subtitle="Manage your gym trainers and their schedules"
         action={
-          <button style={styles.addBtn}>
+          <button
+            style={styles.addBtn}
+            onClick={() => setShowTrainerModal(true)}
+          >
             <MdAdd size={15} color="#0D0F14" />
             Add Trainer
           </button>
@@ -191,6 +195,11 @@ export default function TrainersPage() {
           );
         })}
       </div>
+      {showTrainerModal ? (
+        <AddTrainerModal onClose={() => setShowTrainerModal(false)} />
+      ) : (
+        ""
+      )}
     </div>
   );
 }
