@@ -1,6 +1,11 @@
 import moment from "moment";
-import type { GymClass, Member, MemberStatus, PaymentStatus } from "../types";
-import { MOCK_PLANS } from "../constants/mockData";
+import type {
+  GymClass,
+  Member,
+  MemberStatus,
+  PaymentStatus,
+  Plan,
+} from "../types";
 
 // ─── Date helpers ─────────────────────────────────────────
 export function formatDate(iso: string): string {
@@ -91,6 +96,35 @@ export const calcExpiringSoon = (state: Member[]) => {
   return expiringMembers.length;
 };
 
+// functions add member
+export function totalPaidReturn(planID: string, planState: Plan[]): number {
+  let price: number = 0;
+  planState.forEach((plan) => {
+    if (plan.id === planID) {
+      price = plan.price;
+    }
+  });
+  return price;
+}
+export function calcExpiryDate(
+  startDate: string,
+  planID: string,
+  planState: Plan[],
+): string {
+  let duration: number = 0;
+  planState.forEach((plan) => {
+    if (plan.id === planID) {
+      duration = plan.duration;
+    }
+  });
+  return moment(startDate).add(duration, "months").format("l");
+}
+export function getAvatarColor(): string {
+  let randomColor = Math.floor(Math.random() * 17777215).toString(16);
+  randomColor = randomColor.padStart(6, "0");
+  return `#${randomColor.toUpperCase()}`;
+}
+
 // cale get current year months
 export function getCurrentYearMonths(
   state: Member[],
@@ -126,21 +160,14 @@ export function getCurrentYearMonths(
 }
 
 // cale pie chart data
-export function calcPieChartData(state: Member[]) {
+export function calcPieChartData(state: Member[], planState: Plan[]) {
   const planDistribution = [];
-  for (let i = 0; i < MOCK_PLANS.length; i++) {
-    const NewArr = state.filter((item) => MOCK_PLANS[i].name === item.planName);
-    function generateRandomHexColor(): string {
-      let randomColor = Math.floor(Math.random() * 16777215).toString(16);
-
-      randomColor = randomColor.padStart(6, "0");
-
-      return `#${randomColor.toUpperCase()}`;
-    }
+  for (let i = 0; i < planState.length; i++) {
+    const NewArr = state.filter((item) => planState[i].id === item.planID);
     planDistribution.push({
-      name: MOCK_PLANS[i].name,
+      name: planState[i].name,
       value: NewArr.length,
-      color: generateRandomHexColor(),
+      color: planState[i].color,
     });
   }
   return planDistribution;
@@ -152,4 +179,20 @@ export function todayClassesFun(classes: GymClass[]): GymClass[] {
   return classes
     .filter((cls) => cls.repeatDays.includes(now))
     .sort((a, b) => a.startTime.localeCompare(b.startTime));
+}
+
+// format duration plan
+export function formatDuration(months: number): string {
+  if (months === 1) return "1 month";
+  if (months === 12) return "1 year";
+  if (months === 24) return "2 years";
+  return `${months} months`;
+}
+
+export function generateRandomHexColor(): string {
+  let randomColor = Math.floor(Math.random() * 16777215).toString(16);
+
+  randomColor = randomColor.padStart(6, "0");
+
+  return `#${randomColor.toUpperCase()}`;
 }

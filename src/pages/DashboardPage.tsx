@@ -33,6 +33,7 @@ import {
 import { useAddMember } from "../Hooks/useAddMember";
 import { useMemo } from "react";
 import { useAddClass } from "../Hooks/useAddClass";
+import { usePlan } from "../Hooks/usePlan";
 
 const monthNames = [
   "Jan",
@@ -51,12 +52,13 @@ const monthNames = [
 const nowDate = new Date();
 export default function DashboardPage() {
   const { stateMember } = useAddMember();
+  const { statePlan } = usePlan()
   const recentMembers = stateMember.slice(0, 5);
   const { stateClass } = useAddClass();
   const todayClasses = todayClassesFun(stateClass);
   const planDistribution = useMemo(
-    () => calcPieChartData(stateMember),
-    [stateMember],
+    () => calcPieChartData(stateMember, statePlan),
+    [stateMember, statePlan],
   );
   return (
     <div>

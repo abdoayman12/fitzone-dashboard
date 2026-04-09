@@ -5,14 +5,13 @@ import {
   MdOutlineEmail,
   MdOutlinePhone,
 } from "react-icons/md";
-import { MOCK_PLANS } from "../../constants/mockData";
 import { FaMoneyBillWave } from "react-icons/fa";
 import { SubmitEvent, useEffect, useState } from "react";
 import { useAddMember } from "../../Hooks/useAddMember";
 import { Member } from "@/types";
 import toast from "react-hot-toast";
-import { calcExpiryDate, totalPaidReturn } from "./FormAddMember";
-
+import { calcExpiryDate, totalPaidReturn } from "../../utils/helpers";
+import { usePlan } from "../../Hooks/usePlan";
 
 function EditMemberModal({
   member,
@@ -23,20 +22,21 @@ function EditMemberModal({
 }) {
   const { dispatchMember } = useAddMember();
   const [form, setForm] = useState<Member>({ ...member });
+  const { statePlan } = usePlan();
   function handleSubmit(e: SubmitEvent) {
     e.preventDefault();
     dispatchMember({
       type: "UPD_MEMBER",
       payloud: {
         ...form,
-        expiryDate: calcExpiryDate(form.startDate, form.planName),
+        expiryDate: calcExpiryDate(form.startDate, form.id, statePlan),
       },
     });
     close();
     toast.success("Member Updated successfully");
   }
   useEffect(() => {
-    setForm({ ...form, totalPaid: totalPaidReturn(form.planName) });
+    setForm({ ...form, totalPaid: totalPaidReturn(form.id, statePlan) });
   }, [form.planName]);
   return (
     <form
@@ -173,7 +173,7 @@ function EditMemberModal({
             value={form.planName}
             onChange={(e) => setForm({ ...form, planName: e.target.value })}
           >
-            {MOCK_PLANS.map((plan) => (
+            {statePlan.map((plan) => (
               <option
                 key={plan.id}
                 value={plan.name}

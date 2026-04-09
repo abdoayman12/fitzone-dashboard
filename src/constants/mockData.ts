@@ -1,3 +1,4 @@
+import { generateRandomHexColor } from "../utils/helpers";
 import type {
   Plan,
   Payment,
@@ -31,6 +32,7 @@ export const MOCK_PLANS: Plan[] = [
     name: "Monthly",
     duration: 1,
     price: 350,
+    color: generateRandomHexColor(),
     features: ["Full gym access", "Locker room", "2 free classes/month"],
   },
   {
@@ -38,6 +40,7 @@ export const MOCK_PLANS: Plan[] = [
     name: "Quarterly",
     duration: 3,
     price: 900,
+    color: generateRandomHexColor(),
     features: [
       "Full gym access",
       "Locker room",
@@ -50,6 +53,7 @@ export const MOCK_PLANS: Plan[] = [
     name: "Annual",
     duration: 12,
     price: 3000,
+    color: generateRandomHexColor(),
     features: [
       "Full gym access",
       "Locker room",

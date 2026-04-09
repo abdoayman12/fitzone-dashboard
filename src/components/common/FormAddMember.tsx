@@ -6,42 +6,27 @@ import {
   MdOutlineEmail,
   MdOutlinePhone,
 } from "react-icons/md";
-import { MOCK_PLANS } from "../../constants/mockData";
 import { FaMoneyBillWave } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { SubmitEvent } from "react";
 import { Member, MemberStatus } from "@/types";
 import { v4 as uuidv4 } from "uuid";
-import moment from "moment";
 import { useAddMember } from "../../Hooks/useAddMember";
 import toast from "react-hot-toast";
+import {
+  calcExpiryDate,
+  getAvatarColor,
+  totalPaidReturn,
+} from "../../utils/helpers";
+import { usePlan } from "../../Hooks/usePlan";
 
-export function totalPaidReturn(namePlan: string): number {
-  let price: number = 0;
-  MOCK_PLANS.forEach((plan) => {
-    if (plan.name === namePlan) {
-      price = plan.price;
-    }
-  });
-  return price;
-}
-export function calcExpiryDate(startDate: string, namePlan: string): string {
-  let duration: number = 0;
-  MOCK_PLANS.forEach((plan) => {
-    if (plan.name === namePlan) {
-      duration = plan.duration;
-    }
-  });
-  console.log(duration)
-  return moment(startDate).add(duration, "months").format("l");
-}
-function getAvatarColor(): string {
-  let randomColor = Math.floor(Math.random() * 16777215).toString(16);
-  randomColor = randomColor.padStart(6, "0");
-  return `#${randomColor.toUpperCase()}`;
-}
 function FormAddMember({ close }: { close: () => void }) {
   const { dispatchMember } = useAddMember();
+  const { statePlan } = usePlan();
+  function returnPlanName(planID: string): string | undefined {
+    const plan = statePlan.find((item) => item.id === planID);
+    return plan?.name;
+  }
   function handleSubmit(e: SubmitEvent) {
     e.preventDefault();
     let myuuid = uuidv4();
@@ -57,12 +42,13 @@ function FormAddMember({ close }: { close: () => void }) {
       email: raw.email || undefined,
       gender: raw.gender || undefined,
       brithDate: raw.brithDate || undefined,
-      planName: raw.planName,
+      planID: raw.planID,
+      planName: returnPlanName(raw.planID),
       startDate: raw.dateStart,
-      expiryDate: calcExpiryDate(raw.dateStart, raw.planName),
+      expiryDate: calcExpiryDate(raw.dateStart, raw.planID, statePlan),
       avatarColor: getAvatarColor(),
       status: (raw.status as MemberStatus) ?? "active",
-      totalPaid: totalPaidReturn(raw.planName),
+      totalPaid: totalPaidReturn(raw.planID, statePlan),
       paymentMethod: raw.paymentMethod,
     };
     dispatchMember({ type: "ADD_MEMBER", payloud: data });
@@ -148,14 +134,14 @@ function FormAddMember({ close }: { close: () => void }) {
             <MdCardMembership />
           </span>
           <select
-            name="planName"
+            name="planID"
             id="plan"
             className="bg-[#0D0F14] py-1.5 px-8 text-white rounded-lg outline-none border border-(--color-border)"
           >
-            {MOCK_PLANS.map((plan) => (
+            {statePlan.map((plan) => (
               <option
                 key={plan.id}
-                value={plan.name}
+                value={plan.id}
               >{`${plan.name}: ${plan.price} EGP`}</option>
             ))}
           </select>

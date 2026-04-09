@@ -1,22 +1,15 @@
+// components/common/DeletePlanDialog.tsx
 import { MdDeleteOutline, MdWarningAmber } from "react-icons/md";
-import type { Trainer } from "../../types";
-import { useTrainer } from "../../Hooks/useTrainer";
-import toast from "react-hot-toast";
+import { formatDuration } from "../../utils/helpers";
+import type { Plan } from "../../types";
 
 interface Props {
-  trainer: Trainer;
+  plan: Plan;
   onCancel: () => void;
+  onConfirm: () => void;
 }
 
-export default function DeleteTrainerDialog({ trainer, onCancel }: Props) {
-  const initials = trainer.name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase();
-
-  const { dispatchTrainer } = useTrainer();
-
+export default function DeletePlanDialog({ plan, onCancel, onConfirm }: Props) {
   return (
     <div
       onClick={onCancel}
@@ -79,7 +72,7 @@ export default function DeleteTrainerDialog({ trainer, onCancel }: Props) {
                 margin: "0 0 8px",
               }}
             >
-              Delete Trainer?
+              Delete Plan?
             </p>
             <p
               style={{
@@ -89,56 +82,84 @@ export default function DeleteTrainerDialog({ trainer, onCancel }: Props) {
                 margin: 0,
               }}
             >
-              You are about to permanently delete this trainer. This action
-              cannot be undone.
+              You are about to permanently delete this plan. This action cannot
+              be undone.
             </p>
           </div>
 
-          {/* Trainer chip */}
+          {/* Plan chip */}
           <div
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
               background: "#0D0F14",
               border: "1px solid #1A1E2E",
               borderRadius: 10,
-              padding: "10px 14px",
+              padding: "12px 16px",
               width: "100%",
+              textAlign: "left",
             }}
           >
             <div
               style={{
-                width: 36,
-                height: 36,
-                borderRadius: 9,
-                background: `${trainer.avatarColor}1A`,
-                border: `1px solid ${trainer.avatarColor}40`,
                 display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 12,
-                fontWeight: 700,
-                color: trainer.avatarColor,
-                flexShrink: 0,
+                alignItems: "flex-start",
+                justifyContent: "space-between",
+                marginBottom: 6,
               }}
             >
-              {initials}
+              <div>
+                <p
+                  style={{
+                    color: "#fff",
+                    fontSize: 14,
+                    fontWeight: 700,
+                    margin: 0,
+                  }}
+                >
+                  {plan.name}
+                </p>
+                <p
+                  style={{ color: "#3A4560", fontSize: 11, margin: "3px 0 0" }}
+                >
+                  {formatDuration(plan.duration)} · {plan.duration * 30} days
+                </p>
+              </div>
+              <div style={{ textAlign: "right" }}>
+                <p
+                  style={{
+                    color: "#E8FF47",
+                    fontSize: 18,
+                    fontWeight: 800,
+                    margin: 0,
+                  }}
+                >
+                  {plan.price.toLocaleString()}
+                </p>
+                <p
+                  style={{ color: "#3A4560", fontSize: 11, margin: "2px 0 0" }}
+                >
+                  EGP
+                </p>
+              </div>
             </div>
-            <div>
-              <p
-                style={{
-                  color: "#C8D0E0",
-                  fontSize: 13,
-                  fontWeight: 600,
-                  margin: 0,
-                }}
-              >
-                {trainer.name}
-              </p>
-              <p style={{ color: "#3A4560", fontSize: 11, margin: "2px 0 0" }}>
-                {trainer.specialty}
-              </p>
+            <div
+              style={{ height: 1, background: "#1A1E2E", margin: "8px 0" }}
+            />
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+              {plan.features.map((f, i) => (
+                <span
+                  key={i}
+                  style={{
+                    fontSize: 10,
+                    padding: "2px 8px",
+                    borderRadius: 20,
+                    background: "rgba(232,255,71,0.06)",
+                    color: "#5A6280",
+                    border: "1px solid #1A1E2E",
+                  }}
+                >
+                  {f}
+                </span>
+              ))}
             </div>
           </div>
 
@@ -169,7 +190,8 @@ export default function DeleteTrainerDialog({ trainer, onCancel }: Props) {
                 margin: 0,
               }}
             >
-              All assigned classes for this trainer will be unassigned.
+              Members subscribed to this plan will not be affected, but no new
+              subscriptions can be made.
             </p>
           </div>
         </div>
@@ -192,11 +214,7 @@ export default function DeleteTrainerDialog({ trainer, onCancel }: Props) {
             Cancel
           </button>
           <button
-            onClick={() => {
-              dispatchTrainer({ type: "DELETE_TRAINER", payloud: trainer.id });
-              toast.success(`${trainer.name} deleted`);
-              onCancel();
-            }}
+            onClick={onConfirm}
             style={{
               flex: 1,
               background: "#F87171",

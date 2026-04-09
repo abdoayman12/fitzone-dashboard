@@ -2,12 +2,23 @@ import { MdCheck, MdAdd } from "react-icons/md";
 import PageHeader from "../components/common/PageHeader";
 import Badge from "../components/common/Badge";
 import Avatar from "../components/common/Avatar";
-import { MOCK_PLANS } from "../constants/mockData";
 import { formatDate, memberStatusConfig } from "../utils/helpers";
 import { useAddMember } from "../Hooks/useAddMember";
+import { useState } from "react";
+import AddPlanModal from "../components/common/AddPlanModal";
+import { usePlan } from "../Hooks/usePlan";
+import { RiDeleteBin5Line } from "react-icons/ri";
+import { Plan } from "@/types";
+import toast from "react-hot-toast";
+import DeletePlanDialog from "../components/common/DeletePlanDialog";
+import EditPlanModal from "../components/common/EditPlanModal";
 
 export default function SubscriptionsPage() {
   const { stateMember } = useAddMember();
+  const { statePlan, dispatchPlan } = usePlan();
+  const [planToDelete, setPlanToDelete] = useState<Plan | null>(null);
+  const [planToEdit, setPlanToEdit] = useState<Plan | null>(null);
+  const [showAddPlanModal, setShowAddPlanModal] = useState(false);
   return (
     <div>
       <PageHeader
@@ -15,6 +26,7 @@ export default function SubscriptionsPage() {
         subtitle="Manage pricing plans and member subscriptions"
         action={
           <button
+            onClick={() => setShowAddPlanModal(true)}
             style={{
               display: "flex",
               alignItems: "center",
@@ -43,48 +55,47 @@ export default function SubscriptionsPage() {
           marginBottom: 28,
         }}
       >
-        {MOCK_PLANS.map((plan, i) => {
-          const isPopular = i === 1;
+        {statePlan.map((plan) => {
           return (
             <div
               key={plan.id}
               style={{
                 background: "#10131A",
-                border: `1px solid ${isPopular ? "var(--color-accent)" : "var(--color-border)"}`,
+                border: `1px solid var(--color-border)`,
                 borderRadius: 14,
                 padding: 22,
                 position: "relative",
               }}
             >
-              {isPopular && (
-                <span
+              <div className="flex items-center justify-between">
+                <p
                   style={{
-                    position: "absolute",
-                    top: -10,
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    background: "var(--color-accent)",
-                    color: "#0D0F14",
-                    fontSize: 10,
-                    fontWeight: 700,
-                    padding: "3px 12px",
-                    borderRadius: 20,
+                    color: "var(--color-text-muted)",
+                    fontSize: 11,
+                    textTransform: "uppercase",
+                    letterSpacing: "1px",
+                    margin: "0 0 6px",
                   }}
                 >
-                  POPULAR
-                </span>
-              )}
-              <p
-                style={{
-                  color: "var(--color-text-muted)",
-                  fontSize: 11,
-                  textTransform: "uppercase",
-                  letterSpacing: "1px",
-                  margin: "0 0 6px",
-                }}
-              >
-                {plan.duration}
-              </p>
+                  {plan.duration}
+                </p>
+                <button
+                  onClick={() => setPlanToDelete(plan)}
+                  style={{
+                    width: 30,
+                    height: 30,
+                    borderRadius: 7,
+                    background: "rgba(248,113,113,0.08)",
+                    border: "1px solid rgba(248,113,113,0.25)",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <RiDeleteBin5Line size={13} color="#F87171" />
+                </button>
+              </div>
               <p
                 style={{
                   color: "#fff",
@@ -98,7 +109,7 @@ export default function SubscriptionsPage() {
               <div style={{ margin: "14px 0 18px" }}>
                 <span
                   style={{
-                    color: isPopular ? "var(--color-accent)" : "#fff",
+                    color: "#fff",
                     fontSize: 30,
                     fontWeight: 800,
                   }}
@@ -138,6 +149,7 @@ export default function SubscriptionsPage() {
                 ))}
               </ul>
               <button
+                onClick={() => setPlanToEdit(plan)}
                 style={{
                   width: "100%",
                   padding: "9px",
@@ -145,9 +157,9 @@ export default function SubscriptionsPage() {
                   cursor: "pointer",
                   fontSize: 13,
                   fontWeight: 500,
-                  background: isPopular ? "var(--color-accent)" : "transparent",
-                  color: isPopular ? "#0D0F14" : "var(--color-text-secondary)",
-                  border: isPopular ? "none" : "1px solid var(--color-border)",
+                  background: "transparent",
+                  color: "var(--color-text-secondary)",
+                  border: "1px solid var(--color-border)",
                 }}
               >
                 Edit Plan
@@ -256,6 +268,34 @@ export default function SubscriptionsPage() {
           );
         })}
       </div>
+      {showAddPlanModal ? (
+        <AddPlanModal onClose={() => setShowAddPlanModal(false)} />
+      ) : (
+        ""
+      )}
+      {planToDelete && (
+        <DeletePlanDialog
+          plan={planToDelete}
+          onCancel={() => setPlanToDelete(null)}
+          onConfirm={() => {
+            dispatchPlan({ type: "DELETE_PLAN", payloud: planToDelete.id });
+            toast.success(`"${planToDelete.name}" deleted`);
+            setPlanToDelete(null);
+          }}
+        />
+      )}
+
+      {planToEdit && (
+        <EditPlanModal
+          plan={planToEdit}
+          onCancel={() => setPlanToEdit(null)}
+          onSave={(updated) => {
+            dispatchPlan({ type: "UPD_PLAN", payloud: updated });
+            toast.success(`"${updated.name}" updated`);
+            setPlanToEdit(null);
+          }}
+        />
+      )}
     </div>
   );
 }
