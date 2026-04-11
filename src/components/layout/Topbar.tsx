@@ -46,32 +46,6 @@ export default function Topbar() {
 
       {/* Right: search + notif + avatar */}
       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-        {/* Search */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            background: "var(--color-bg-base)",
-            border: "1px solid var(--color-border)",
-            borderRadius: 8,
-            padding: "6px 12px",
-          }}
-        >
-          <MdSearch size={16} color="var(--color-text-muted)" />
-          <input
-            placeholder="Search..."
-            style={{
-              background: "none",
-              border: "none",
-              outline: "none",
-              color: "var(--color-text-secondary)",
-              fontSize: 13,
-              width: 140,
-            }}
-          />
-        </div>
-
         {/* Notification bell */}
         <div style={{ position: "relative" }}>
           <button
@@ -101,25 +75,6 @@ export default function Topbar() {
               border: "1.5px solid #10131A",
             }}
           />
-        </div>
-
-        {/* Avatar */}
-        <div
-          style={{
-            width: 36,
-            height: 36,
-            background: "var(--color-accent)",
-            borderRadius: 8,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontWeight: 700,
-            fontSize: 12,
-            color: "#0D0F14",
-            cursor: "pointer",
-          }}
-        >
-          AH
         </div>
       </div>
     </header>

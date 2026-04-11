@@ -52,7 +52,6 @@ function FormAddMember({ close }: { close: () => void }) {
       paymentMethod: raw.paymentMethod,
     };
     dispatchMember({ type: "ADD_MEMBER", payloud: data });
-    console.log(data);
     close();
     toast.success("Member Added successfully");
   }

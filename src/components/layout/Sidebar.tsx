@@ -4,10 +4,10 @@ import {
   MdPeople,
   MdCalendarMonth,
   MdCardMembership,
-  MdSettings,
   MdFitnessCenter,
   MdSportsGymnastics,
 } from "react-icons/md";
+import { useAddMember } from "../../Hooks/useAddMember";
 
 type NavItem = {
   label: string;
@@ -19,7 +19,11 @@ const mainNav: NavItem[] = [
   { label: "Overview", path: "/dashboard", icon: <MdDashboard size={18} /> },
   { label: "Members", path: "/members", icon: <MdPeople size={18} /> },
   { label: "Classes", path: "/classes", icon: <MdCalendarMonth size={18} /> },
-  { label: 'Trainers', path: '/trainers', icon: <MdSportsGymnastics size={18} /> }
+  {
+    label: "Trainers",
+    path: "/trainers",
+    icon: <MdSportsGymnastics size={18} />,
+  },
 ];
 
 const financeNav: NavItem[] = [
@@ -81,6 +85,8 @@ function NavSection({ label, items }: { label: string; items: NavItem[] }) {
 }
 
 export default function Sidebar() {
+  const { stateMember, dispatchMember } = useAddMember();
+
   return (
     <aside
       style={{
@@ -146,17 +152,6 @@ export default function Sidebar() {
         <NavSection label="Main" items={mainNav} />
         <NavSection label="Finance" items={financeNav} />
       </nav>
-
-      {/* Settings */}
-      <div style={{ borderTop: "1px solid var(--color-border)", padding: 10 }}>
-        <NavItemLink
-          item={{
-            label: "Settings",
-            path: "/settings",
-            icon: <MdSettings size={18} />,
-          }}
-        />
-      </div>
     </aside>
   );
 }

@@ -8,8 +8,9 @@ export interface Member {
   email?: string;
   gender?: string;
   brithDate?: string;
-  avatarColor?: string; // hex accent color
-  planName: string;
+  avatarColor: string; // hex accent color
+  planID: string;
+  planName: string | undefined;
   startDate: string; // ISO date string
   expiryDate: string; // ISO date string
   status: MemberStatus;
@@ -24,6 +25,7 @@ export interface Plan {
   name: string;
   duration: number;
   price: number; // EGP
+  color: string;
   features: string[];
 }
 
@@ -78,7 +80,7 @@ export interface Trainer {
 
 // ─── Dashboard KPIs ───────────────────────────────────────
 export interface KpiData {
-  memberGrowth: { month: string; }[];
+  memberGrowth: { month: string }[];
 }
 
 // types/index.ts

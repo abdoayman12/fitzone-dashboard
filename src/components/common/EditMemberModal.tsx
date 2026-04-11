@@ -8,9 +8,13 @@ import {
 import { FaMoneyBillWave } from "react-icons/fa";
 import { SubmitEvent, useEffect, useState } from "react";
 import { useAddMember } from "../../Hooks/useAddMember";
-import { Member } from "@/types";
+import { Member, MemberStatus } from "@/types";
 import toast from "react-hot-toast";
-import { calcExpiryDate, totalPaidReturn } from "../../utils/helpers";
+import {
+  calceDateExpery,
+  calcExpiryDate,
+  totalPaidReturn,
+} from "../../utils/helpers";
 import { usePlan } from "../../Hooks/usePlan";
 
 function EditMemberModal({
@@ -25,11 +29,26 @@ function EditMemberModal({
   const { statePlan } = usePlan();
   function handleSubmit(e: SubmitEvent) {
     e.preventDefault();
+    const newExpiryDate = calcExpiryDate(
+      form.startDate,
+      form.planID,
+      statePlan,
+    );
+    let num = calceDateExpery(form.startDate, newExpiryDate);
+    let status: MemberStatus = "active";
+    if (num === 100) {
+      status = "expired";
+    } else if (num >= 80 && num < 100) {
+      status = "expiring";
+    } else {
+      status = "active";
+    }
     dispatchMember({
       type: "UPD_MEMBER",
       payloud: {
         ...form,
-        expiryDate: calcExpiryDate(form.startDate, form.id, statePlan),
+        expiryDate: newExpiryDate,
+        status: status,
       },
     });
     close();

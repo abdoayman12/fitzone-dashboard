@@ -120,7 +120,7 @@ export function calcExpiryDate(
   return moment(startDate).add(duration, "months").format("l");
 }
 export function getAvatarColor(): string {
-  let randomColor = Math.floor(Math.random() * 17777215).toString(16);
+  let randomColor = Math.floor(Math.random() * 16777215).toString(16);
   randomColor = randomColor.padStart(6, "0");
   return `#${randomColor.toUpperCase()}`;
 }
@@ -195,4 +195,16 @@ export function generateRandomHexColor(): string {
   randomColor = randomColor.padStart(6, "0");
 
   return `#${randomColor.toUpperCase()}`;
+}
+
+// calce date Expery
+export function calceDateExpery(startDate: string, expiryDate: string) {
+  const start = new Date(startDate).getTime();
+  const expiry = new Date(expiryDate).getTime();
+  const now = Date.now();
+  const num = Math.min(
+    100,
+    Math.round(((now - start) / (expiry - start)) * 100),
+  );
+  return num;
 }

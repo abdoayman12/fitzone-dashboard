@@ -33,7 +33,6 @@ export default function MembersPage() {
   const [showDialogUPD, setShowDialogUPD] = useState<Member | undefined>();
   const [viewMember, setViewMember] = useState<Member | null>(null);
   const { stateMember } = useAddMember();
-  console.log(stateMember);
 
   const filtered = stateMember.filter((m) => {
     const matchSearch =
