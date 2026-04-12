@@ -34,7 +34,8 @@ export default function ManageEnrollmentModal({ gymClass, onClose }: Props) {
   const availableMembers = stateMember.filter(
     (m) =>
       !enrolledIds.has(m.id) &&
-      m.name.toLowerCase().includes(search.toLowerCase()),
+      m.name.toLowerCase().includes(search.toLowerCase()) &&
+      !(m.status === "expired"),
   );
 
   const handleEnroll = (memberId: string, memberName: string) => {
@@ -66,7 +67,7 @@ export default function ManageEnrollmentModal({ gymClass, onClose }: Props) {
     toast.success(`${memberName} removed`);
     dispatchClass({ type: "DEL_ENROLLED", payloud: gymClass.id });
   };
-  console.log(stateEnrollment)
+  console.log(stateEnrollment);
   return (
     <div
       onClick={onClose}

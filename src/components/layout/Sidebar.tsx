@@ -8,6 +8,8 @@ import {
   MdSportsGymnastics,
 } from "react-icons/md";
 import { useAddMember } from "../../Hooks/useAddMember";
+import { calceDateExpery } from "../../utils/helpers";
+import { useEffect } from "react";
 
 type NavItem = {
   label: string;
@@ -86,7 +88,31 @@ function NavSection({ label, items }: { label: string; items: NavItem[] }) {
 
 export default function Sidebar() {
   const { stateMember, dispatchMember } = useAddMember();
+  setInterval(() => {
+    stateMember.forEach((item) => {
+      let num = calceDateExpery(item.startDate, item.expiryDate);
+      if (num === 100) {
+        dispatchMember({ type: "UPD_STATUS_TO_EXPIRED", payloud: item.id });
+      } else {
+        dispatchMember({ type: "UPD_STATUS_TO_EXPIRING", payloud: item.id });
+      }
+    });
+  }, 3600000);
 
+  useEffect(() => {
+    stateMember.forEach((item) => {
+      let num = calceDateExpery(item.startDate, item.expiryDate);
+      if (num === 100) {
+        dispatchMember({ type: "UPD_STATUS_TO_EXPIRED", payloud: item.id });
+      } else {
+        dispatchMember({ type: "UPD_STATUS_TO_EXPIRING", payloud: item.id });
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    dispatchMember({ type: "SAVE_MEMBERS_FROM_LOCAL" });
+  }, []);
   return (
     <aside
       style={{

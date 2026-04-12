@@ -52,7 +52,7 @@ const monthNames = [
 const nowDate = new Date();
 export default function DashboardPage() {
   const { stateMember } = useAddMember();
-  const { statePlan } = usePlan()
+  const { statePlan } = usePlan();
   const recentMembers = stateMember.slice(0, 5);
   const { stateClass } = useAddClass();
   const todayClasses = todayClassesFun(stateClass);
@@ -65,7 +65,7 @@ export default function DashboardPage() {
       {/* Greeting */}
       <div style={{ marginBottom: 24 }}>
         <h1 style={{ color: "#fff", fontSize: 22, fontWeight: 700, margin: 0 }}>
-          Good morning, Abdullah 👋
+          Good morning 👋
         </h1>
         <p
           style={{
@@ -329,63 +329,77 @@ export default function DashboardPage() {
         </div>
 
         {/* Rows */}
-        {recentMembers.map((m) => {
-          const st = memberStatusConfig[m.status];
-          return (
-            <div
-              key={m.id}
-              style={{
-                display: "grid",
-                gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr",
-                gap: 8,
-                padding: "12px 8px",
-                borderBottom: "1px solid #111520",
-                alignItems: "center",
-              }}
-            >
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <Avatar name={m.name} color={m.avatarColor} size={30} />
-                <div>
-                  <p
-                    style={{
-                      color: "#C8D0E0",
-                      fontSize: 13,
-                      fontWeight: 500,
-                      margin: 0,
-                    }}
-                  >
-                    {m.name}
-                  </p>
-                  <p
-                    style={{
-                      color: "var(--color-text-muted)",
-                      fontSize: 11,
-                      margin: 0,
-                    }}
-                  >
-                    {m.phone}
-                  </p>
+        {recentMembers.length === 0 ? (
+          <div
+            style={{
+              padding: 40,
+              textAlign: "center",
+              color: "var(--color-text-muted)",
+              fontSize: 14,
+            }}
+          >
+            No members found.
+          </div>
+        ) : (
+          recentMembers.map((m, i) => {
+            const st = memberStatusConfig[m.status];
+            return (
+              <div
+                key={m.id}
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr",
+                  gap: 8,
+                  padding: "12px 8px",
+                  borderBottom:
+                    i < recentMembers.length - 1 ? "1px solid #111520" : "none",
+                  alignItems: "center",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <Avatar name={m.name} color={m.avatarColor} size={30} />
+                  <div>
+                    <p
+                      style={{
+                        color: "#C8D0E0",
+                        fontSize: 13,
+                        fontWeight: 500,
+                        margin: 0,
+                      }}
+                    >
+                      {m.name}
+                    </p>
+                    <p
+                      style={{
+                        color: "var(--color-text-muted)",
+                        fontSize: 11,
+                        margin: 0,
+                      }}
+                    >
+                      {m.phone}
+                    </p>
+                  </div>
                 </div>
+                <span
+                  style={{ color: "var(--color-text-secondary)", fontSize: 12 }}
+                >
+                  {m.planName}
+                </span>
+                <span
+                  style={{ color: "var(--color-text-secondary)", fontSize: 12 }}
+                >
+                  {formatDate(m.startDate)}
+                </span>
+                <span
+                  style={{ color: "var(--color-text-secondary)", fontSize: 12 }}
+                >
+                  {formatDate(m.expiryDate)}
+                </span>
+                <Badge label={st.label} color={st.color} bg={st.bg} />
               </div>
-              <span
-                style={{ color: "var(--color-text-secondary)", fontSize: 12 }}
-              >
-                {m.planName}
-              </span>
-              <span
-                style={{ color: "var(--color-text-secondary)", fontSize: 12 }}
-              >
-                {formatDate(m.startDate)}
-              </span>
-              <span
-                style={{ color: "var(--color-text-secondary)", fontSize: 12 }}
-              >
-                {formatDate(m.expiryDate)}
-              </span>
-              <Badge label={st.label} color={st.color} bg={st.bg} />
-            </div>
-          );
-        })}
+            );
+          })
+        )}
       </div>
     </div>
   );

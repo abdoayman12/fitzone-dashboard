@@ -13,6 +13,8 @@ import {
   memberStatusConfig,
 } from "../../utils/helpers";
 import Badge from "./Badge";
+import { useState } from "react";
+import RenewPlanModal from "./RenewPlanModal";
 
 interface Props {
   member: Member;
@@ -21,6 +23,7 @@ interface Props {
 }
 
 export default function MemberProfilePanel({ member, onClose, onEdit }: Props) {
+  const [showRenew, setShowRenew] = useState(false);
   const status = memberStatusConfig[member.status];
 
   // احسب نسبة الـ progress بتاع الاشتراك
@@ -339,11 +342,21 @@ export default function MemberProfilePanel({ member, onClose, onEdit }: Props) {
               justifyContent: "center",
               gap: 6,
             }}
+            onClick={() => {
+              setShowRenew(true);
+            }}
           >
             <MdRefresh size={15} /> Renew Plan
           </button>
         </div>
       </div>
+      {showRenew && (
+        <RenewPlanModal
+          member={member}
+          onClose={() => setShowRenew(false)}
+          onCloseParent={onClose}
+        />
+      )}
     </>
   );
 }

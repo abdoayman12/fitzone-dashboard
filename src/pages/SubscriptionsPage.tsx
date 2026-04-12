@@ -16,6 +16,7 @@ import EditPlanModal from "../components/common/EditPlanModal";
 export default function SubscriptionsPage() {
   const { stateMember } = useAddMember();
   const { statePlan, dispatchPlan } = usePlan();
+  console.log(statePlan);
   const [planToDelete, setPlanToDelete] = useState<Plan | null>(null);
   const [planToEdit, setPlanToEdit] = useState<Plan | null>(null);
   const [showAddPlanModal, setShowAddPlanModal] = useState(false);
@@ -219,54 +220,66 @@ export default function SubscriptionsPage() {
             </span>
           ))}
         </div>
-
-        {stateMember.map((m, i) => {
-          const st = memberStatusConfig[m.status];
-          return (
-            <div
-              key={m.id}
-              style={{
-                display: "grid",
-                gridTemplateColumns: "2fr 1fr 1fr 1fr 0.8fr",
-                gap: 8,
-                padding: "13px 20px",
-                alignItems: "center",
-                borderBottom:
-                  i < stateMember.length - 1 ? "1px solid #111520" : "none",
-              }}
-            >
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <Avatar name={m.name} color={m.avatarColor} size={30} />
-                <p
-                  style={{
-                    color: "#C8D0E0",
-                    fontSize: 13,
-                    fontWeight: 500,
-                    margin: 0,
-                  }}
+        {stateMember.length === 0 ? (
+          <div
+            style={{
+              padding: 40,
+              textAlign: "center",
+              color: "var(--color-text-muted)",
+              fontSize: 14,
+            }}
+          >
+            No members found.
+          </div>
+        ) : (
+          stateMember.map((m, i) => {
+            const st = memberStatusConfig[m.status];
+            return (
+              <div
+                key={m.id}
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "2fr 1fr 1fr 1fr 0.8fr",
+                  gap: 8,
+                  padding: "13px 20px",
+                  alignItems: "center",
+                  borderBottom:
+                    i < stateMember.length - 1 ? "1px solid #111520" : "none",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <Avatar name={m.name} color={m.avatarColor} size={30} />
+                  <p
+                    style={{
+                      color: "#C8D0E0",
+                      fontSize: 13,
+                      fontWeight: 500,
+                      margin: 0,
+                    }}
+                  >
+                    {m.name}
+                  </p>
+                </div>
+                <span
+                  style={{ color: "var(--color-text-secondary)", fontSize: 12 }}
                 >
-                  {m.name}
-                </p>
+                  {m.planName}
+                </span>
+                <span
+                  style={{ color: "var(--color-text-secondary)", fontSize: 12 }}
+                >
+                  {formatDate(m.startDate)}
+                </span>
+                <span
+                  style={{ color: "var(--color-text-secondary)", fontSize: 12 }}
+                >
+                  {formatDate(m.expiryDate)}
+                </span>
+                <Badge label={st.label} color={st.color} bg={st.bg} />
               </div>
-              <span
-                style={{ color: "var(--color-text-secondary)", fontSize: 12 }}
-              >
-                {m.planName}
-              </span>
-              <span
-                style={{ color: "var(--color-text-secondary)", fontSize: 12 }}
-              >
-                {formatDate(m.startDate)}
-              </span>
-              <span
-                style={{ color: "var(--color-text-secondary)", fontSize: 12 }}
-              >
-                {formatDate(m.expiryDate)}
-              </span>
-              <Badge label={st.label} color={st.color} bg={st.bg} />
-            </div>
-          );
-        })}
+            );
+          })
+        )}
       </div>
       {showAddPlanModal ? (
         <AddPlanModal onClose={() => setShowAddPlanModal(false)} />

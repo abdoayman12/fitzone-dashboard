@@ -16,6 +16,7 @@ import toast from "react-hot-toast";
 import {
   calcExpiryDate,
   getAvatarColor,
+  returnPlanName,
   totalPaidReturn,
 } from "../../utils/helpers";
 import { usePlan } from "../../Hooks/usePlan";
@@ -23,10 +24,7 @@ import { usePlan } from "../../Hooks/usePlan";
 function FormAddMember({ close }: { close: () => void }) {
   const { dispatchMember } = useAddMember();
   const { statePlan } = usePlan();
-  function returnPlanName(planID: string): string | undefined {
-    const plan = statePlan.find((item) => item.id === planID);
-    return plan?.name;
-  }
+
   function handleSubmit(e: SubmitEvent) {
     e.preventDefault();
     let myuuid = uuidv4();
@@ -43,7 +41,7 @@ function FormAddMember({ close }: { close: () => void }) {
       gender: raw.gender || undefined,
       brithDate: raw.brithDate || undefined,
       planID: raw.planID,
-      planName: returnPlanName(raw.planID),
+      planName: returnPlanName(raw.planID, statePlan),
       startDate: raw.dateStart,
       expiryDate: calcExpiryDate(raw.dateStart, raw.planID, statePlan),
       avatarColor: getAvatarColor(),

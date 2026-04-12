@@ -1,4 +1,3 @@
-import { MdNotifications, MdSearch } from "react-icons/md";
 import { useLocation } from "react-router-dom";
 
 const pageTitles: Record<string, string> = {
@@ -42,40 +41,6 @@ export default function Topbar() {
             day: "numeric",
           })}
         </p>
-      </div>
-
-      {/* Right: search + notif + avatar */}
-      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-        {/* Notification bell */}
-        <div style={{ position: "relative" }}>
-          <button
-            style={{
-              width: 36,
-              height: 36,
-              background: "var(--color-bg-base)",
-              border: "1px solid var(--color-border)",
-              borderRadius: 8,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-            }}
-          >
-            <MdNotifications size={18} color="var(--color-text-secondary)" />
-          </button>
-          <span
-            style={{
-              position: "absolute",
-              top: 6,
-              right: 6,
-              width: 7,
-              height: 7,
-              background: "var(--color-accent)",
-              borderRadius: "50%",
-              border: "1.5px solid #10131A",
-            }}
-          />
-        </div>
       </div>
     </header>
   );

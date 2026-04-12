@@ -6,13 +6,14 @@ import {
   MdOutlinePhone,
 } from "react-icons/md";
 import { FaMoneyBillWave } from "react-icons/fa";
-import { SubmitEvent, useEffect, useState } from "react";
+import { SubmitEvent, useState } from "react";
 import { useAddMember } from "../../Hooks/useAddMember";
 import { Member, MemberStatus } from "@/types";
 import toast from "react-hot-toast";
 import {
   calceDateExpery,
   calcExpiryDate,
+  returnPlanName,
   totalPaidReturn,
 } from "../../utils/helpers";
 import { usePlan } from "../../Hooks/usePlan";
@@ -48,15 +49,14 @@ function EditMemberModal({
       payloud: {
         ...form,
         expiryDate: newExpiryDate,
+        planName: returnPlanName(form.planID, statePlan),
+        totalPaid: totalPaidReturn(form.planID, statePlan),
         status: status,
       },
     });
     close();
     toast.success("Member Updated successfully");
   }
-  useEffect(() => {
-    setForm({ ...form, totalPaid: totalPaidReturn(form.id, statePlan) });
-  }, [form.planName]);
   return (
     <form
       onSubmit={handleSubmit}
@@ -186,16 +186,16 @@ function EditMemberModal({
             <MdCardMembership />
           </span>
           <select
-            name="planName"
+            name="planID"
             id="plan"
             className="bg-[#0D0F14] py-1.5 px-8 text-white rounded-lg outline-none border border-(--color-border)"
-            value={form.planName}
-            onChange={(e) => setForm({ ...form, planName: e.target.value })}
+            value={form.planID}
+            onChange={(e) => setForm({ ...form, planID: e.target.value })}
           >
             {statePlan.map((plan) => (
               <option
                 key={plan.id}
-                value={plan.name}
+                value={plan.id}
               >{`${plan.name}: ${plan.price} EGP`}</option>
             ))}
           </select>

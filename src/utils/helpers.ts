@@ -208,3 +208,13 @@ export function calceDateExpery(startDate: string, expiryDate: string) {
   );
   return num;
 }
+
+// return plan name
+
+export function returnPlanName(
+  planID: string,
+  statePlan: Plan[],
+): string | undefined {
+  const plan = statePlan.find((item) => item.id === planID);
+  return plan?.name;
+}
