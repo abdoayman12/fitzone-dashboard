@@ -1,7 +1,6 @@
 import { generateRandomHexColor } from "../utils/helpers";
 import type {
   Plan,
-  Payment,
   Trainer,
   KpiData,
 } from "../types";
@@ -63,71 +62,6 @@ export const MOCK_PLANS: Plan[] = [
     ],
   },
 ];
-
-// ─── Payments ────────────────────────────────────────────
-export const MOCK_PAYMENTS: Payment[] = [
-  {
-    id: "pay-1",
-    memberId: "m-1",
-    memberName: "Karim Mostafa",
-    planName: "Annual",
-    amount: 3000,
-    method: "card",
-    status: "paid",
-    date: "2025-01-01",
-  },
-  {
-    id: "pay-2",
-    memberId: "m-2",
-    memberName: "Nour Salem",
-    planName: "Monthly",
-    amount: 350,
-    method: "cash",
-    status: "paid",
-    date: "2025-03-01",
-  },
-  {
-    id: "pay-3",
-    memberId: "m-3",
-    memberName: "Hassan Farid",
-    planName: "Quarterly",
-    amount: 900,
-    method: "wallet",
-    status: "overdue",
-    date: "2025-03-01",
-  },
-  {
-    id: "pay-4",
-    memberId: "m-4",
-    memberName: "Sara Ahmed",
-    planName: "Annual",
-    amount: 3000,
-    method: "card",
-    status: "paid",
-    date: "2025-02-01",
-  },
-  {
-    id: "pay-5",
-    memberId: "m-5",
-    memberName: "Omar Khaled",
-    planName: "Monthly",
-    amount: 350,
-    method: "cash",
-    status: "pending",
-    date: "2025-03-10",
-  },
-  {
-    id: "pay-6",
-    memberId: "m-6",
-    memberName: "Mona Hassan",
-    planName: "Quarterly",
-    amount: 900,
-    method: "card",
-    status: "paid",
-    date: "2025-01-15",
-  },
-];
-
 
 // ─── Trainers ────────────────────────────────────────────
 export const MOCK_TRAINERS: Trainer[] = [
