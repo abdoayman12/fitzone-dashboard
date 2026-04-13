@@ -5,8 +5,8 @@ type UnenrollMember = {
   type: "UNENROLL_MEMBER";
   payloud: { classId: string; memberId: string };
 };
-
-export type IActionDispatch = EnrollMember | UnenrollMember;
+type localStorage = { type: "LOCAL_STORAGE" };
+export type IActionDispatch = EnrollMember | UnenrollMember | localStorage;
 
 export const EnrollmentReducer = (
   stateEnrollment: Enrollment[],
@@ -14,17 +14,23 @@ export const EnrollmentReducer = (
 ) => {
   switch (actionEnrollment.type) {
     case "ENROLL_MEMBER": {
-      return [...stateEnrollment, actionEnrollment.payloud];
+      let newArr = [...stateEnrollment, actionEnrollment.payloud];
+      localStorage.setItem("enrollment", JSON.stringify(newArr));
+      return newArr;
     }
     case "UNENROLL_MEMBER": {
-      return stateEnrollment.filter(
+      let newArr = stateEnrollment.filter(
         (item) =>
           !(
             item.classId === actionEnrollment.payloud.classId &&
             item.memberId === actionEnrollment.payloud.memberId
           ),
       );
+      localStorage.setItem("enrollment", JSON.stringify(newArr));
+      return newArr;
     }
+    case "LOCAL_STORAGE":
+      return JSON.parse(localStorage.getItem("enrollment") || "[]");
     default:
       return stateEnrollment;
   }

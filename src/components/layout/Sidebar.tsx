@@ -10,6 +10,10 @@ import {
 import { useAddMember } from "../../Hooks/useAddMember";
 import { calceDateExpery } from "../../utils/helpers";
 import { useEffect } from "react";
+import { useAddClass } from "../../Hooks/useAddClass";
+import { useEnrollment } from "../../Hooks/useEnrollment";
+import { usePlan } from "../../Hooks/usePlan";
+import { useTrainer } from "../../Hooks/useTrainer";
 
 type NavItem = {
   label: string;
@@ -88,6 +92,10 @@ function NavSection({ label, items }: { label: string; items: NavItem[] }) {
 
 export default function Sidebar() {
   const { stateMember, dispatchMember } = useAddMember();
+  const { dispatchClass } = useAddClass();
+  const { dispatchEnrollment } = useEnrollment();
+  const { dispatchPlan } = usePlan();
+  const { dispatchTrainer } = useTrainer();
   setInterval(() => {
     stateMember.forEach((item) => {
       let num = calceDateExpery(item.startDate, item.expiryDate);
@@ -112,6 +120,10 @@ export default function Sidebar() {
 
   useEffect(() => {
     dispatchMember({ type: "SAVE_MEMBERS_FROM_LOCAL" });
+    dispatchClass({ type: "LOCAL_STORAGE" });
+    dispatchEnrollment({ type: "LOCAL_STORAGE" });
+    dispatchPlan({ type: "LOCAL_STORAGE" });
+    dispatchTrainer({ type: "LOCAL_STORAGE" });
   }, []);
   return (
     <aside

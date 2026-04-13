@@ -3,8 +3,13 @@ import { GymClass } from "@/types";
 type AddClass = { type: "ADD_CLASS"; payloud: GymClass };
 type AddEnrolled = { type: "ADD_ENROLLED"; payloud: string };
 type DelEnrolled = { type: "DEL_ENROLLED"; payloud: string };
+type localStorage = { type: "LOCAL_STORAGE" };
 
-export type IActionDispatch = AddClass | AddEnrolled | DelEnrolled;
+export type IActionDispatch =
+  | AddClass
+  | AddEnrolled
+  | DelEnrolled
+  | localStorage;
 
 export const AddClass = (
   stateClass: GymClass[],
@@ -12,26 +17,34 @@ export const AddClass = (
 ) => {
   switch (actionClass.type) {
     case "ADD_CLASS": {
-      return [...stateClass, actionClass.payloud];
+      let newArr = [...stateClass, actionClass.payloud];
+      localStorage.setItem("classes", JSON.stringify(newArr));
+      return newArr;
     }
     case "ADD_ENROLLED": {
-      return stateClass.map((item) => {
+      let newArr = stateClass.map((item) => {
         if (item.id === actionClass.payloud) {
           return { ...item, enrolled: item.enrolled++ };
         } else {
           return item;
         }
       });
+      localStorage.setItem("classes", JSON.stringify(newArr));
+      return newArr;
     }
     case "DEL_ENROLLED": {
-      return stateClass.map((item) => {
+      let newArr = stateClass.map((item) => {
         if (item.id === actionClass.payloud) {
           return { ...item, enrolled: item.enrolled-- };
         } else {
           return item;
         }
       });
+      localStorage.setItem("classes", JSON.stringify(newArr));
+      return newArr;
     }
+    case "LOCAL_STORAGE":
+      return JSON.parse(localStorage.getItem("classes") || "[]");
     default:
       return stateClass;
   }
