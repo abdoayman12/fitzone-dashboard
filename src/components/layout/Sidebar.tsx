@@ -101,7 +101,7 @@ export default function Sidebar() {
       let num = calceDateExpery(item.startDate, item.expiryDate);
       if (num === 100) {
         dispatchMember({ type: "UPD_STATUS_TO_EXPIRED", payloud: item.id });
-      } else {
+      } else if (num >= 80 && num < 100) {
         dispatchMember({ type: "UPD_STATUS_TO_EXPIRING", payloud: item.id });
       }
     });
@@ -112,7 +112,7 @@ export default function Sidebar() {
       let num = calceDateExpery(item.startDate, item.expiryDate);
       if (num === 100) {
         dispatchMember({ type: "UPD_STATUS_TO_EXPIRED", payloud: item.id });
-      } else {
+      } else if (num >= 80 && num < 100) {
         dispatchMember({ type: "UPD_STATUS_TO_EXPIRING", payloud: item.id });
       }
     });
