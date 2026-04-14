@@ -96,6 +96,16 @@ export default function Sidebar() {
   const { dispatchEnrollment } = useEnrollment();
   const { dispatchPlan } = usePlan();
   const { dispatchTrainer } = useTrainer();
+
+  
+  useEffect(() => {
+    dispatchMember({ type: "SAVE_MEMBERS_FROM_LOCAL" });
+    dispatchClass({ type: "LOCAL_STORAGE" });
+    dispatchEnrollment({ type: "LOCAL_STORAGE" });
+    dispatchPlan({ type: "LOCAL_STORAGE" });
+    dispatchTrainer({ type: "LOCAL_STORAGE" });
+  }, []);
+
   setInterval(() => {
     stateMember.forEach((item) => {
       let num = calceDateExpery(item.startDate, item.expiryDate);
@@ -116,14 +126,6 @@ export default function Sidebar() {
         dispatchMember({ type: "UPD_STATUS_TO_EXPIRING", payloud: item.id });
       }
     });
-  }, []);
-
-  useEffect(() => {
-    dispatchMember({ type: "SAVE_MEMBERS_FROM_LOCAL" });
-    dispatchClass({ type: "LOCAL_STORAGE" });
-    dispatchEnrollment({ type: "LOCAL_STORAGE" });
-    dispatchPlan({ type: "LOCAL_STORAGE" });
-    dispatchTrainer({ type: "LOCAL_STORAGE" });
   }, []);
   return (
     <aside

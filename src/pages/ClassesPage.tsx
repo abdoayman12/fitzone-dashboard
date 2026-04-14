@@ -1,6 +1,12 @@
 import Avatar from "../components/common/Avatar";
 import PageHeader from "../components/common/PageHeader";
-import { MdAdd, MdAccessTime, MdPeople } from "react-icons/md";
+import {
+  MdAdd,
+  MdAccessTime,
+  MdPeople,
+  MdEdit,
+  MdDelete,
+} from "react-icons/md";
 import { useState } from "react";
 import AddClassModal from "../components/common/AddClassModal";
 import { useAddClass } from "../Hooks/useAddClass";
@@ -9,16 +15,20 @@ import { useEnrollment } from "../Hooks/useEnrollment";
 import { GymClass } from "@/types";
 import ManageEnrollmentModal from "../components/common/ManageEnrollmentModal";
 import { useTrainer } from "../Hooks/useTrainer";
+import DeleteClassDialog from "../components/common/DeleteClassDialog";
+import EditClassModal from "../components/common/EditClassModal";
+import toast from "react-hot-toast";
 
 export default function ClassesPage() {
-  const { stateClass } = useAddClass();
+  const { stateClass, dispatchClass } = useAddClass();
   const { stateEnrollment } = useEnrollment();
   const [showAddClass, setShowAddClass] = useState<boolean>(false);
   const [managingClass, setManagingClass] = useState<GymClass | null>(null);
   const todayClasses = todayClassesFun(stateClass);
-  const { stateTrainer } = useTrainer()
+  const { stateTrainer } = useTrainer();
+  const [classToDelete, setClassToDelete] = useState<GymClass | null>(null);
+  const [classToEdit, setClassToEdit] = useState<GymClass | null>(null);
 
-  console.log(stateEnrollment)
   return (
     <div>
       <PageHeader
@@ -222,7 +232,7 @@ export default function ClassesPage() {
                   />
                 </div>
               </div>
-              
+
               <div
                 style={{ height: 1, background: "#1A1E2E", marginBottom: 12 }}
               />
@@ -288,39 +298,73 @@ export default function ClassesPage() {
                     enrolled
                   </span>
                 </div>
-                <button
-                  onClick={() => setManagingClass(cls)}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 5,
-                    padding: "6px 14px",
-                    borderRadius: 8,
-                    border: `1px solid ${spotsLeft === 0 ? "rgba(248,113,113,0.25)" : "rgba(232,255,71,0.25)"}`,
-                    background:
-                      spotsLeft === 0
-                        ? "rgba(248,113,113,0.06)"
-                        : "rgba(232,255,71,0.06)",
-                    color: spotsLeft === 0 ? "#F87171" : "#E8FF47",
-                    fontSize: 12,
-                    fontWeight: 600,
-                    cursor: "pointer",
-                  }}
-                >
-                  <svg
-                    width="13"
-                    height="13"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setClassToEdit(cls)}
+                    style={{
+                      width: 30,
+                      height: 30,
+                      borderRadius: 7,
+                      background: "rgba(55,138,221,0.08)",
+                      border: "1px solid rgba(55,138,221,0.25)",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
                   >
-                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-                    <circle cx="9" cy="7" r="4" />
-                    <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
-                  </svg>
-                  Manage Enrollment
-                </button>
+                    <MdEdit size={13} color="#378ADD" />
+                  </button>
+                  <button
+                    onClick={() => setClassToDelete(cls)}
+                    style={{
+                      width: 30,
+                      height: 30,
+                      borderRadius: 7,
+                      background: "rgba(248,113,113,0.08)",
+                      border: "1px solid rgba(248,113,113,0.25)",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <MdDelete size={13} color="#F87171" />
+                  </button>
+                  <button
+                    onClick={() => setManagingClass(cls)}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 5,
+                      padding: "6px 14px",
+                      borderRadius: 8,
+                      border: `1px solid ${spotsLeft === 0 ? "rgba(248,113,113,0.25)" : "rgba(232,255,71,0.25)"}`,
+                      background:
+                        spotsLeft === 0
+                          ? "rgba(248,113,113,0.06)"
+                          : "rgba(232,255,71,0.06)",
+                      color: spotsLeft === 0 ? "#F87171" : "#E8FF47",
+                      fontSize: 12,
+                      fontWeight: 600,
+                      cursor: "pointer",
+                    }}
+                  >
+                    <svg
+                      width="13"
+                      height="13"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                      <circle cx="9" cy="7" r="4" />
+                      <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
+                    </svg>
+                    Manage Enrollment
+                  </button>
+                </div>
               </div>
             </div>
           );
@@ -421,6 +465,29 @@ export default function ClassesPage() {
           );
         })}
       </div>
+      {classToDelete && (
+        <DeleteClassDialog
+          gymClass={classToDelete}
+          onCancel={() => setClassToDelete(null)}
+          onConfirm={() => {
+            dispatchClass({ type: "DELETE_CLASS", payloud: classToDelete.id });
+            toast.success(`"${classToDelete.name}" deleted`);
+            setClassToDelete(null);
+          }}
+        />
+      )}
+
+      {classToEdit && (
+        <EditClassModal
+          gymClass={classToEdit}
+          onCancel={() => setClassToEdit(null)}
+          onSave={(updated) => {
+            dispatchClass({ type: "UPD_CLASS", payloud: updated });
+            toast.success(`"${updated.name}" updated`);
+            setClassToEdit(null);
+          }}
+        />
+      )}
     </div>
   );
 }

@@ -1,17 +1,18 @@
 import { MdDeleteOutline, MdWarningAmber } from "react-icons/md";
-import type { Member } from "../../types";
-import { useAddMember } from "../../Hooks/useAddMember";
-import toast from "react-hot-toast";
+import type { GymClass } from "../../types";
 
 interface Props {
-  member: Member;
+  gymClass: GymClass;
+  onConfirm: () => void;
   onCancel: () => void;
 }
 
-export default function DeleteConfirmDialog({ member, onCancel }: Props) {
-  const { dispatchMember } = useAddMember();
+export default function DeleteClassDialog({
+  gymClass,
+  onConfirm,
+  onCancel,
+}: Props) {
   return (
-    // Overlay
     <div
       onClick={onCancel}
       style={{
@@ -25,7 +26,6 @@ export default function DeleteConfirmDialog({ member, onCancel }: Props) {
       }}
       className="backdrop-blur-sm"
     >
-      {/* Dialog — stopPropagation عشان الكليك على الداخل ميقفلش */}
       <div
         onClick={(e) => e.stopPropagation()}
         style={{
@@ -33,11 +33,10 @@ export default function DeleteConfirmDialog({ member, onCancel }: Props) {
           border: "1px solid #1E2230",
           borderRadius: 14,
           width: "100%",
-          maxWidth: 400,
+          maxWidth: 380,
           overflow: "hidden",
         }}
       >
-        {/* Body */}
         <div
           style={{
             padding: "28px 24px 20px",
@@ -45,7 +44,7 @@ export default function DeleteConfirmDialog({ member, onCancel }: Props) {
             flexDirection: "column",
             alignItems: "center",
             textAlign: "center",
-            gap: 16,
+            gap: 14,
           }}
         >
           {/* Icon */}
@@ -64,70 +63,119 @@ export default function DeleteConfirmDialog({ member, onCancel }: Props) {
             <MdDeleteOutline size={26} color="#F87171" />
           </div>
 
-          {/* Title + desc */}
+          {/* Title */}
           <div>
             <p
               style={{
                 color: "#fff",
                 fontSize: 16,
                 fontWeight: 600,
-                marginBottom: 8,
+                margin: "0 0 8px",
               }}
             >
-              Delete Member?
+              Delete Class?
             </p>
-            <p style={{ color: "#5A6280", fontSize: 13, lineHeight: 1.6 }}>
-              You are about to permanently delete this member and all their
-              associated data. This action cannot be undone.
+            <p
+              style={{
+                color: "#5A6280",
+                fontSize: 13,
+                lineHeight: 1.6,
+                margin: 0,
+              }}
+            >
+              You are about to permanently delete this class. This action cannot
+              be undone.
             </p>
           </div>
 
-          {/* Member chip */}
+          {/* Class chip */}
           <div
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
               background: "#0D0F14",
-              border: "1px solid #1A1E2E",
+              border: `1px solid #1A1E2E`,
               borderRadius: 10,
-              padding: "10px 16px",
+              padding: "12px 14px",
               width: "100%",
+              textAlign: "left",
+              borderTop: `3px solid ${gymClass.color}`,
             }}
           >
             <div
               style={{
-                width: 34,
-                height: 34,
-                borderRadius: 8,
-                background: "rgba(232,255,71,0.12)",
-                border: "1px solid rgba(232,255,71,0.2)",
                 display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 11,
-                fontWeight: 700,
-                color: "#E8FF47",
-                flexShrink: 0,
+                justifyContent: "space-between",
+                alignItems: "flex-start",
+                marginBottom: 6,
               }}
             >
-              {member.name
-                .split(" ")
-                .map((n) => n[0])
-                .join("")
-                .toUpperCase()}
-            </div>
-            <div style={{ textAlign: "left" }}>
-              <p style={{ color: "#C8D0E0", fontSize: 13, fontWeight: 600 }}>
-                {member.name}
+              <div>
+                <p
+                  style={{
+                    color: "#fff",
+                    fontSize: 14,
+                    fontWeight: 700,
+                    margin: 0,
+                  }}
+                >
+                  {gymClass.name}
+                </p>
+                <p
+                  style={{
+                    color: gymClass.color,
+                    fontSize: 10,
+                    fontWeight: 700,
+                    textTransform: "uppercase",
+                    letterSpacing: ".5px",
+                    margin: "3px 0 0",
+                  }}
+                >
+                  {gymClass.category}
+                </p>
+              </div>
+              <p style={{ color: "#8A9AB5", fontSize: 12, margin: 0 }}>
+                {gymClass.startTime} — {gymClass.endTime}
               </p>
-              <p style={{ color: "#3A4560", fontSize: 11, marginTop: 2 }}>
-                {member.planName} · {member.status}
+            </div>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                marginTop: 4,
+              }}
+            >
+              <div
+                style={{
+                  width: 22,
+                  height: 22,
+                  borderRadius: 5,
+                  background: `${gymClass.color}20`,
+                  color: gymClass.color,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 8,
+                  fontWeight: 700,
+                }}
+              >
+                {gymClass.trainerName
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")
+                  .toUpperCase()}
+              </div>
+              <p style={{ color: "#5A6280", fontSize: 11, margin: 0 }}>
+                {gymClass.trainerName}
+              </p>
+              <p
+                style={{ color: "#3A4560", fontSize: 11, margin: "0 0 0 auto" }}
+              >
+                {gymClass.capacity} spots
               </p>
             </div>
           </div>
 
-          {/* Warning note */}
+          {/* Warning */}
           <div
             style={{
               display: "flex",
@@ -142,13 +190,19 @@ export default function DeleteConfirmDialog({ member, onCancel }: Props) {
             }}
           >
             <MdWarningAmber
-              size={16}
+              size={15}
               color="#F87171"
               style={{ flexShrink: 0, marginTop: 1 }}
             />
-            <p style={{ color: "#F87171", fontSize: 12, lineHeight: 1.5 }}>
-              Payment history and subscription records will also be permanently
-              removed.
+            <p
+              style={{
+                color: "#F87171",
+                fontSize: 12,
+                lineHeight: 1.5,
+                margin: 0,
+              }}
+            >
+              All enrolled members in this class will be removed.
             </p>
           </div>
         </div>
@@ -165,18 +219,13 @@ export default function DeleteConfirmDialog({ member, onCancel }: Props) {
               padding: 10,
               color: "#8A9AB5",
               fontSize: 13,
-              fontWeight: 500,
               cursor: "pointer",
             }}
           >
             Cancel
           </button>
           <button
-            onClick={() => {
-              dispatchMember({ type: "DELETE_MEMBER", payloud: member.id });
-              onCancel()
-              toast.success('Member deleted successfully')
-            }}
+            onClick={onConfirm}
             style={{
               flex: 1,
               background: "#F87171",
@@ -193,8 +242,7 @@ export default function DeleteConfirmDialog({ member, onCancel }: Props) {
               gap: 6,
             }}
           >
-            <MdDeleteOutline size={16} />
-            Yes, Delete Member
+            <MdDeleteOutline size={16} /> Yes, Delete
           </button>
         </div>
       </div>
