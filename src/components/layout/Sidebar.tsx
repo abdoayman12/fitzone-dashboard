@@ -14,6 +14,7 @@ import { useAddClass } from "../../Hooks/useAddClass";
 import { useEnrollment } from "../../Hooks/useEnrollment";
 import { usePlan } from "../../Hooks/usePlan";
 import { useTrainer } from "../../Hooks/useTrainer";
+import { Member } from "@/types";
 
 type NavItem = {
   label: string;
@@ -97,7 +98,6 @@ export default function Sidebar() {
   const { dispatchPlan } = usePlan();
   const { dispatchTrainer } = useTrainer();
 
-  
   useEffect(() => {
     dispatchMember({ type: "SAVE_MEMBERS_FROM_LOCAL" });
     dispatchClass({ type: "LOCAL_STORAGE" });
@@ -118,7 +118,10 @@ export default function Sidebar() {
   }, 3600000);
 
   useEffect(() => {
-    stateMember.forEach((item) => {
+    let membersLocal: Member[] = JSON.parse(
+      localStorage.getItem("members") || "[]",
+    );
+    membersLocal.forEach((item) => {
       let num = calceDateExpery(item.startDate, item.expiryDate);
       if (num === 100) {
         dispatchMember({ type: "UPD_STATUS_TO_EXPIRED", payloud: item.id });
