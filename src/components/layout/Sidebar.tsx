@@ -23,7 +23,7 @@ type NavItem = {
 };
 
 const mainNav: NavItem[] = [
-  { label: "Overview", path: "/dashboard", icon: <MdDashboard size={18} /> },
+  { label: "Overview", path: "/", icon: <MdDashboard size={18} /> },
   { label: "Members", path: "/members", icon: <MdPeople size={18} /> },
   { label: "Classes", path: "/classes", icon: <MdCalendarMonth size={18} /> },
   {

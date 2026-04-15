@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import MainLayout from "../components/layout/MainLayout";
 
 // Pages (lazy imports for performance)
@@ -12,12 +12,11 @@ export default function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<MainLayout />}>
-        <Route index element={<Navigate to="/dashboard" replace />} />
-        <Route path="dashboard" element={<DashboardPage />} />
-        <Route path="members" element={<MembersPage />} />
-        <Route path="classes" element={<ClassesPage />} />
-        <Route path="trainers" element={<TrainersPage />} />
-        <Route path="subscriptions" element={<SubscriptionsPage />} />
+        <Route path="/" element={<DashboardPage />} />
+        <Route path="/members" element={<MembersPage />} />
+        <Route path="/classes" element={<ClassesPage />} />
+        <Route path="/trainers" element={<TrainersPage />} />
+        <Route path="/subscriptions" element={<SubscriptionsPage />} />
       </Route>
     </Routes>
   );
